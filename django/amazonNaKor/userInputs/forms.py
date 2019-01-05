@@ -16,14 +16,14 @@ class InvoiceForm(forms.Form):
     # transit_memo = forms.CharField(label='배송 메모', max_length=100, required=False)
 
     # # Package info
-    # item_url = forms.CharField(label='판매 site URL', required=False)
-    # width = forms.DecimalField(label='가로(cm)', min_value=0)
-    # length = forms.DecimalField(label='세로(cm)', min_value=0)
-    # height = forms.DecimalField(label='높이(cm)', min_value=0)
-    # weight = forms.DecimalField(label='중량', min_value=0)
-    # WEIGHT_METRIC_CHOICES =[('1','Kg'), ('2','lb')] # (value, label)
-    # weight_metric = forms.ChoiceField(label='중량단위', choices=WEIGHT_METRIC_CHOICES, widget=forms.RadioSelect, required=False)
-    # box_qty = forms.IntegerField(label='Box 수량', min_value=1)
+    item_url = forms.CharField(label='판매 site URL', required=False)
+    width = forms.DecimalField(label='가로(cm)', min_value=0)
+    length = forms.DecimalField(label='세로(cm)', min_value=0)
+    height = forms.DecimalField(label='높이(cm)', min_value=0)
+    weight = forms.DecimalField(label='중량', min_value=0)
+    WEIGHT_METRIC_CHOICES =[('1','Kg'), ('2','lb')] # (value, label)
+    weight_metric = forms.ChoiceField(label='중량단위', choices=WEIGHT_METRIC_CHOICES, widget=forms.RadioSelect, required=False)
+    box_qty = forms.IntegerField(label='Box 수량', min_value=1)
 
     # # Item info (EN)
     # item_name = forms.CharField(label='상품명', max_length=100)

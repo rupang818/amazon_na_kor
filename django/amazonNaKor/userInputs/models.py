@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 from django.core.validators import RegexValidator, MinValueValidator, URLValidator
-
-# Create your models here.
 
 class InvoiceForm(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -36,3 +35,16 @@ class InvoiceForm(models.Model):
     # Invoice info
     email = models.CharField(max_length=100)
     final_price = models.DecimalField(max_digits=6, decimal_places=2)
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, models.CASCADE)
+    description = models.CharField(max_length=100, default='')
+    city = models.CharField(max_length=100, default='')
+    website = models.URLField(default='')
+    phone = models.IntegerField(default=0)
+
+def create_profile(sender, **kwargs):
+    if kwargs['created']:
+        user_profile = UserProfile.objects.create(user=kwargs['instance'])
+
+post_save.connect(create_profile, sender=User)
