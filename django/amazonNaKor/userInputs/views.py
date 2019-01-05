@@ -1,9 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 from .forms import InvoiceForm
-
 
 def get(self, request):
     form = InvoiceForm()
@@ -18,18 +19,6 @@ def post(self, request):
         return HttpResponseRedirect('/thanks/')
     args = {'form': form, 'text': text}
     return render(request, self.template_name, args)
-
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/userInputs/')
-    else:
-        form = UserCreationForm()
-
-        args = {'form': form}
-        return render(request, 'userInputs/reg_form.html', args)
 
 def home(request):
     return render(request, 'userInputs/home.html')

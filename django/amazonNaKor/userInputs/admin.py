@@ -1,6 +1,4 @@
 from django.contrib import admin
-from userInputs.models import UserProfile, InvoiceForm
+from userInputs.models import InvoiceForm
 
-# Register your models here.
-admin.site.register(UserProfile)
 admin.site.register(InvoiceForm)

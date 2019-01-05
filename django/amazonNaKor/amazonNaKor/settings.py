@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'userInputs.apps.UserinputsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -121,4 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = '/userInputs/'
+LOGIN_REDIRECT_URL = '/account/'
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025

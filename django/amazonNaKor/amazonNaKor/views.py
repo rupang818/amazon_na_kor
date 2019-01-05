@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 def login_redirect(request):
-    return redirect('/userInputs/login')
+    return HttpResponseRedirect('/account/login')
