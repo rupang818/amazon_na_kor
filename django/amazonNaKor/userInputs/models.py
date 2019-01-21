@@ -11,7 +11,7 @@ class InvoiceForm(models.Model):
     # Receiver info
     receiver_name = models.CharField(max_length=100)
     receiver_phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
-    receiver_postal_code = models.PositiveIntegerField(default=15987, validators=[MinValueValidator(1)], max_length=5)
+    receiver_postal_code = models.PositiveIntegerField(default=15987, validators=[MinValueValidator(1)])
     receiver_address = models.CharField(max_length=150)
     receiver_detail_address = models.CharField(max_length=100)
     customs_id = models.CharField(max_length=10)
