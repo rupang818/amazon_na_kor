@@ -1,21 +1,21 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 
 from .forms import RegistrationForm, EditProfileForm
+from .models import User
 
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
+
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/account/')
     else:
         form = RegistrationForm()
-
         args = {'form': form}
         return render(request, 'account/reg_form.html', args)
 
@@ -53,6 +53,6 @@ def change_password(request):
         args = {'form': form}
         return render(request, 'account/change_password.html', args)
 
-@login_required
+# TODO: if registered, allow. Otherwise, direct to register.html
 def home(request):
     return render(request, 'account/home.html')

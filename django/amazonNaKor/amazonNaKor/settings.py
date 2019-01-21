@@ -126,3 +126,4 @@ LOGIN_REDIRECT_URL = '/account/'
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
+AUTH_USER_MODEL = 'account.User'

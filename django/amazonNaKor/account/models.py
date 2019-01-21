@@ -1,16 +1,63 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, models.CASCADE)
-    description = models.CharField(max_length=100, default='')
-    city = models.CharField(max_length=100, default='')
-    website = models.URLField(default='')
-    phone = models.IntegerField(default=0)
+class UserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        """Create and save a regular User with the given email and password."""
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
+
+class User(AbstractUser):
+    username = None
+    email = models.EmailField(_('email address'), unique=True)
+    phone = models.IntegerField("Phone", default='')
+    address1 = models.CharField("Address line 1", max_length=1024, default='')
+    address2 = models.CharField("Address line 2", max_length=1024, default='')
+    city = models.CharField("City", max_length=1024, default='')
+    state = models.CharField("State", max_length=1024, default='')
+    zip_code = models.IntegerField("Zip/Postal Code", default='')
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['phone', 'address1', 'first_name', 'last_name', 'city', 'state', 'zip_code']
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
 
 def create_profile(sender, **kwargs):
+    print("Create profile called")
     if kwargs['created']:
-        user_profile = UserProfile.objects.create(user=kwargs['instance'])
+        user_profile = User.objects.create(user=kwargs['instance'])
 
-post_save.connect(create_profile, sender=User)
+post_save.connect(create_profile, sender=settings.AUTH_USER_MODEL)

@@ -20,6 +20,5 @@ from . import views
 urlpatterns = [
     path('', views.login_redirect, name='login_redirect'),
     path('account/', include('account.urls')),
-    path('userInputs/', include('userInputs.urls')),
     path('admin/', admin.site.urls),
 ]
