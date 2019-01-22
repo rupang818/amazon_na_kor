@@ -55,3 +55,22 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+class Recepient(models.Model):
+    sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
+    name = models.CharField("이름", max_length=1024, default='')
+    phone = models.IntegerField("전화번호", default='')
+    postal_code = models.IntegerField("우편번호", default='')
+    address = models.CharField("주소", max_length=1024, default='')
+    customs_id = models.CharField("통관고유번호", max_length=1024, default='')
+
+
+class Package(models.Model):
+    pkg_type = models.IntegerField("수업유형", default='1')
+    width = models.IntegerField("가로(cm)", default='10')
+    length = models.IntegerField("세로(cm)", default='10')
+    height = models.IntegerField("높이(cm)", default='10')
+    weight = models.IntegerField("중량", default='2')
+    metric = models.IntegerField("중량단위", default='2')
+    box_count = models.IntegerField("Box수량", default='2')
+    standard = models.IntegerField("일반신청", default='0')

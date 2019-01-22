@@ -4,8 +4,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 
-from .forms import RegistrationForm, EditProfileForm
-from .models import User
+from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm
+from .models import User, Recepient, Package
 
 def register(request):
     if request.method == 'POST':
@@ -13,17 +13,46 @@ def register(request):
 
         if form.is_valid():
             form.save()
-            #get the username and password
-            email = self.request.POST['email']
-            password = self.request.POST['password1']
-            #authenticate user then login
-            email = authenticate(username=username, password=password)
-            login(self.request, user)
+            # TODO: make sure to auto-login after registering
+            # #get the username and password
+            # email = self.request.POST['email']
+            # password = self.request.POST['password1']
+            # #authenticate user then login
+            # email = authenticate(username=username, password=password)
+            # login(self.request, user)
             return HttpResponseRedirect('/account/')
     else:
         form = RegistrationForm()
         args = {'form': form}
         return render(request, 'account/reg_form.html', args)
+
+@login_required
+def registerRecepient(request):
+    if request.method == 'POST':
+        form = EnterRecepientInfoForm(request.POST)
+
+        if form.is_valid():
+            recepient = form.save(request.user)
+            # return HttpResponseRedirect('/account/registerPackage')
+            args = {'recepient': recepient}
+            return render(request, 'account/recepient_profile.html', args)
+    else:
+        form = EnterRecepientInfoForm()
+        args = {'form': form}
+        return render(request, 'account/reg_recepient_form.html', args)
+
+@login_required
+def registerPackage(request):
+    if request.method == 'POST':
+        form = EnterPackageInfoForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/account/registerPackage')
+    else:
+        form = EnterPackageInfoForm()
+        args = {'form': form}
+        return render(request, 'account/reg_package_form.html', args)
 
 @login_required
 def view_profile(request):

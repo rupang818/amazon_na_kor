@@ -6,15 +6,14 @@
 
 {% block body %}
 <div class="container">
-  <h1>Profile</h1>
-  <p>Email (Username): {{ user.email }}</p>
-  <p>First name: {{ user.first_name }}</p>
-  <p>Last name: {{ user.last_name }}</p>
-  <p>Phone: {{ user.phone }}</p>
-  <p>Address1: {{ user.address1 }}</p>
-  <p>Address2: {{ user.address2 }}</p>
-  <p>City: {{ user.city }}</p>
-  <p>State: {{ user.state }}</p>
-  <p>Zip_code: {{ user.zip_code }}</p>
+  <h1>프로필</h1>
+  <p>이메일 (Username): {{ user.email }}</p>
+  <p>이름: {{ user.first_name }} {{ user.last_name }}</p>
+  <p>전화번호: {{ user.phone }}</p>
+  <p>주소1: {{ user.address1 }}</p>
+  <p>주소2: {{ user.address2 }}</p>
+  <p>도시 (City): {{ user.city }}</p>
+  <p>주 (State): {{ user.state }}</p>
+  <p>우편번호 (Zip Code): {{ user.zip_code }}</p>
 </div>
 {% endblock %}

@@ -1,12 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User
+from .models import User, Recepient, Package
 
 from localflavor.us.forms import USStateSelect, USZipCodeField
 
 
 class RegistrationForm(UserCreationForm):
-
     class Meta:
         model = User
         fields = (
@@ -60,5 +59,42 @@ class EditProfileForm(UserChangeForm):
         # exclude = ()
 
 
+class EnterRecepientInfoForm(forms.ModelForm):
+
+    class Meta:
+        model = Recepient
+        fields = (
+            # 'sender_email',
+            'name',
+            'phone',
+            'postal_code',
+            'address',
+            'customs_id',
+        )
+        unique_together = (("sender_email", "name"),)
+
+    def save(self, user = None, commit=True):
+        recepient = super(EnterRecepientInfoForm, self).save(commit=False) # commit=false => I haven't finished editing yet
+        recepient.sender_email = user   #PK1
+        recepient.name = self.cleaned_data['name'] #PK2
+        recepient.phone = self.cleaned_data['phone']
+        recepient.postal_code = self.cleaned_data['postal_code']
+        recepient.address = self.cleaned_data['address']
+        recepient.customs_id = self.cleaned_data['customs_id']
 
 
+        if commit:
+            recepient.save()
+        return recepient
+
+class EnterPackageInfoForm(forms.ModelForm):
+
+    class Meta:
+        model = Package
+        fields = (
+            'width',
+            'length',
+            'height',
+            'weight',
+            'box_count',
+        )
