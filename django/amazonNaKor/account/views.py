@@ -32,10 +32,8 @@ def registerRecepient(request):
         form = EnterRecepientInfoForm(request.POST)
 
         if form.is_valid():
-            recepient = form.save(request.user)
-            # return HttpResponseRedirect('/account/registerPackage')
-            args = {'recepient': recepient}
-            return render(request, 'account/recepient_profile.html', args)
+            form.save(request.user)
+            return HttpResponseRedirect('/account/registerPackage')
     else:
         form = EnterRecepientInfoForm()
         args = {'form': form}
@@ -50,9 +48,16 @@ def registerPackage(request):
             form.save()
             return HttpResponseRedirect('/account/registerPackage')
     else:
+        # TODO: show the related Recepient info using (email, receiver_name) as PK
         form = EnterPackageInfoForm()
         args = {'form': form}
         return render(request, 'account/reg_package_form.html', args)
+
+@login_required
+def view_recepients(request):
+    user=request.user
+    recepients_list=Recepient.objects.filter(sender_email=user)
+    return render(request,"account/recepients.html",{'recepients_list':recepients_list})
 
 @login_required
 def view_profile(request):
