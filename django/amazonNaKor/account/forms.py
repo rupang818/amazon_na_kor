@@ -1,15 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User#, UserProfile
+from .models import User
+
+from localflavor.us.forms import USStateSelect, USZipCodeField
+
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    phone = forms.IntegerField(min_value=1, widget=forms.NumberInput(attrs={'size':'11'}))
-    address1 = forms.CharField(max_length=1024)
-    address2 = forms.CharField(max_length=1024)
-    zip_code = forms.CharField(max_length=12)
-    city = forms.CharField(max_length=1024)
-    state = forms.CharField(max_length=1024)
 
     class Meta:
         model = User
@@ -22,9 +18,9 @@ class RegistrationForm(UserCreationForm):
             'phone',
             'address1',
             'address2',
-            'zip_code',
             'city',
-            'state'
+            'state',
+            'zip_code',
         )
 
     def save(self, commit=True):
@@ -46,7 +42,7 @@ class RegistrationForm(UserCreationForm):
 
 class EditProfileForm(UserChangeForm):
     address2 = forms.CharField(max_length=1024)
-    
+
     class Meta:
         model = User
         fields = (
@@ -57,9 +53,9 @@ class EditProfileForm(UserChangeForm):
             'phone',
             'address1',
             'address2',
-            'zip_code',
             'city',
-            'state'
+            'state',
+            'zip_code',
         )
         # exclude = ()
 

@@ -13,6 +13,12 @@ def register(request):
 
         if form.is_valid():
             form.save()
+            #get the username and password
+            email = self.request.POST['email']
+            password = self.request.POST['password1']
+            #authenticate user then login
+            email = authenticate(username=username, password=password)
+            login(self.request, user)
             return HttpResponseRedirect('/account/')
     else:
         form = RegistrationForm()

@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from localflavor.us.models import USStateField, USZipCodeField
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -39,14 +40,14 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
-    username = None
+    username = None # Don't use the username - instead, authenticate using email
     email = models.EmailField(_('email address'), unique=True)
-    phone = models.IntegerField("Phone", default='')
+    phone = models.IntegerField("Phone", default=12345678)
     address1 = models.CharField("Address line 1", max_length=1024, default='')
     address2 = models.CharField("Address line 2", max_length=1024, default='')
     city = models.CharField("City", max_length=1024, default='')
-    state = models.CharField("State", max_length=1024, default='')
-    zip_code = models.IntegerField("Zip/Postal Code", default='')
+    state = USStateField()
+    zip_code = USZipCodeField()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone', 'address1', 'first_name', 'last_name', 'city', 'state', 'zip_code']
 
@@ -54,10 +55,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
-def create_profile(sender, **kwargs):
-    print("Create profile called")
-    if kwargs['created']:
-        user_profile = User.objects.create(user=kwargs['instance'])
-
-post_save.connect(create_profile, sender=settings.AUTH_USER_MODEL)
