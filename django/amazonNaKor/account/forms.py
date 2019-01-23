@@ -40,7 +40,6 @@ class RegistrationForm(UserCreationForm):
         return user
 
 class EditProfileForm(UserChangeForm):
-    address2 = forms.CharField(max_length=1024)
 
     class Meta:
         model = User
@@ -56,7 +55,6 @@ class EditProfileForm(UserChangeForm):
             'state',
             'zip_code',
         )
-        # exclude = ()
 
 
 class EnterRecepientInfoForm(forms.ModelForm):
@@ -64,7 +62,6 @@ class EnterRecepientInfoForm(forms.ModelForm):
     class Meta:
         model = Recepient
         fields = (
-            # 'sender_email',
             'name',
             'phone',
             'postal_code',
@@ -74,7 +71,7 @@ class EnterRecepientInfoForm(forms.ModelForm):
         unique_together = (("sender_email", "name"),)
 
     def save(self, user = None, commit=True):
-        recepient = super(EnterRecepientInfoForm, self).save(commit=False) # commit=false => I haven't finished editing yet
+        recepient = super(EnterRecepientInfoForm, self).save(commit=False)
         recepient.sender_email = user   #PK1
         recepient.name = self.cleaned_data['name'] #PK2
         recepient.phone = self.cleaned_data['phone']
@@ -88,6 +85,7 @@ class EnterRecepientInfoForm(forms.ModelForm):
         return recepient
 
 class EnterPackageInfoForm(forms.ModelForm):
+    metric = forms.IntegerField(widget=forms.HiddenInput(), initial='2') 
 
     class Meta:
         model = Package
@@ -98,3 +96,18 @@ class EnterPackageInfoForm(forms.ModelForm):
             'weight',
             'box_count',
         )
+
+    def save(self, user = None, recepient = None, commit=True):
+        package = super(EnterPackageInfoForm, self).save(commit=False)
+        package.sender_email = user   #PK1 (PK2 is 'id')
+        # package.recepient = recepient #PK3
+        package.width = self.cleaned_data['width']
+        package.length = self.cleaned_data['length']
+        package.height = self.cleaned_data['height']
+        package.weight = self.cleaned_data['weight']
+        package.metric = self.cleaned_data['metric']
+        package.box_count = self.cleaned_data['box_count']
+
+        if commit:
+            package.save()
+        return package

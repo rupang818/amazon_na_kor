@@ -45,13 +45,21 @@ def registerPackage(request):
         form = EnterPackageInfoForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/account/registerPackage')
+            form.save(request.user)
+            # return HttpResponseRedirect('/account/registerPackage')
+            packages_list=Package.objects.filter(sender_email=request.user)
+            return render(request,"account/packages.html",{'packages_list':packages_list})
+
     else:
         # TODO: show the related Recepient info using (email, receiver_name) as PK
         form = EnterPackageInfoForm()
         args = {'form': form}
         return render(request, 'account/reg_package_form.html', args)
+
+@login_required
+def view_profile(request):
+    args = {'user': request.user}
+    return render(request, 'account/profile.html', args)
 
 @login_required
 def view_recepients(request):
@@ -60,9 +68,10 @@ def view_recepients(request):
     return render(request,"account/recepients.html",{'recepients_list':recepients_list})
 
 @login_required
-def view_profile(request):
-    args = {'user': request.user}
-    return render(request, 'account/profile.html', args)
+def view_packages(request):
+    user=request.user
+    packages_list=Package.objects.filter(sender_email=user)
+    return render(request,"account/packages.html",{'packages_list':packages_list})
 
 @login_required
 def edit_profile(request):

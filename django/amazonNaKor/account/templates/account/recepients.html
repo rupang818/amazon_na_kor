@@ -7,7 +7,7 @@
 {% block body %}
 <div class="container">
   <h1>주소록</h1>
-    <p>발송자 이메일: {{ recepients_list.0.sender_email }}</p>
+    <p><b>발송자 이메일: {{ recepients_list.0.sender_email }}</b></p>
     <hr>
     {% for recepient in recepients_list %}
       <p>이름: {{ recepient.name }}</p>

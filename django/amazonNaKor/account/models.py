@@ -43,8 +43,8 @@ class User(AbstractUser):
     username = None # Don't use the username - instead, authenticate using email
     email = models.EmailField(_('email address'), unique=True)
     phone = models.IntegerField("Phone", default=12345678)
-    address1 = models.CharField("Address line 1", max_length=1024, default='')
-    address2 = models.CharField("Address line 2", max_length=1024, default='')
+    address1 = models.CharField("Address 1", max_length=1024, default='')
+    address2 = models.CharField("Address 2", max_length=1024, default='', blank=True)
     city = models.CharField("City", max_length=1024, default='')
     state = USStateField()
     zip_code = USZipCodeField()
@@ -66,11 +66,13 @@ class Recepient(models.Model):
 
 
 class Package(models.Model):
+    sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
+    # pkg_id = models.IntegerField(primary_key=True)
     pkg_type = models.IntegerField("수업유형", default='1')
     width = models.IntegerField("가로(cm)", default='10')
     length = models.IntegerField("세로(cm)", default='10')
     height = models.IntegerField("높이(cm)", default='10')
-    weight = models.IntegerField("중량", default='2')
+    weight = models.IntegerField("중량(lb)", default='2')
     metric = models.IntegerField("중량단위", default='2')
     box_count = models.IntegerField("Box수량", default='2')
     standard = models.IntegerField("일반신청", default='0')
