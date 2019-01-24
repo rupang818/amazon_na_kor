@@ -4,9 +4,14 @@
 <div class="container">
   <h1>수화물 정보</h1>
   <br>
+  <p>이름: {{ name }}</p>
+  <p>전화번호: {{ phone }}</p>
+  <p>우편번호: {{ postal_code }}</p>
+  <p>주소: {{ address }}</p>
+  <p>통관고유번호: {{ customs_id }}</p>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ package_form.as_p }}
     <button type="submit">Submit</button>
   </form>
 </div>

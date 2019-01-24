@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.models import Session
 
 from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm
 from .models import User, Recepient, Package
@@ -29,31 +30,40 @@ def register(request):
 @login_required
 def registerRecepient(request):
     if request.method == 'POST':
-        form = EnterRecepientInfoForm(request.POST)
+        recepient_form = EnterRecepientInfoForm(request.POST)
 
-        if form.is_valid():
-            form.save(request.user)
+        if recepient_form.is_valid():
+            # recepient_form.save(request.user)
+            request.session['recepient_form_data'] = recepient_form.cleaned_data
             return HttpResponseRedirect('/account/registerPackage')
     else:
-        form = EnterRecepientInfoForm()
-        args = {'form': form}
+        recepient_form = EnterRecepientInfoForm()
+        args = {'recepient_form': recepient_form}
         return render(request, 'account/reg_recepient_form.html', args)
 
 @login_required
 def registerPackage(request):
     if request.method == 'POST':
-        form = EnterPackageInfoForm(request.POST)
+        package_form = EnterPackageInfoForm(request.POST)
 
-        if form.is_valid():
-            form.save(request.user)
+        if package_form.is_valid():
+            package_form.save(request.user)
+            recepient_form = request.session.get('recepient_form_data')
+            recepient_form.save(request.user)
+
             # return HttpResponseRedirect('/account/registerPackage')
             packages_list=Package.objects.filter(sender_email=request.user)
             return render(request,"account/packages.html",{'packages_list':packages_list})
 
     else:
-        # TODO: show the related Recepient info using (email, receiver_name) as PK
-        form = EnterPackageInfoForm()
-        args = {'form': form}
+        package_form = EnterPackageInfoForm()
+        recepient_form_data = request.session.get('recepient_form_data')
+        name = recepient_form_data['name']
+        phone = recepient_form_data['phone']
+        postal_code = recepient_form_data['postal_code']
+        address = recepient_form_data['address']
+        customs_id = recepient_form_data['customs_id']
+        args = {'package_form': package_form, 'name': name, 'phone': phone, 'postal_code': postal_code, 'address': address, 'customs_id': customs_id}
         return render(request, 'account/reg_package_form.html', args)
 
 @login_required
