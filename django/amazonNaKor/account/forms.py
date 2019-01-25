@@ -73,7 +73,7 @@ class EnterRecepientInfoForm(forms.ModelForm):
     def save(self, user = None, commit=True):
         recepient = super(EnterRecepientInfoForm, self).save(commit=False)
         recepient.sender_email = user   #PK1
-        recepient.name = self.cleaned_data['name'] #PK2
+        recepient.name = self.cleaned_data['name']
         recepient.phone = self.cleaned_data['phone']
         recepient.postal_code = self.cleaned_data['postal_code']
         recepient.address = self.cleaned_data['address']
@@ -86,6 +86,8 @@ class EnterRecepientInfoForm(forms.ModelForm):
 
 class EnterPackageInfoForm(forms.ModelForm):
     metric = forms.IntegerField(widget=forms.HiddenInput(), initial='2') 
+    pkg_type = forms.IntegerField(widget=forms.HiddenInput(), initial='1')
+    standard_order = forms.IntegerField(widget=forms.HiddenInput(), initial='0')
 
     class Meta:
         model = Package
@@ -96,17 +98,20 @@ class EnterPackageInfoForm(forms.ModelForm):
             'weight',
             'box_count',
         )
+        unique_together = (("sender_email", "recepient_id"),)
 
     def save(self, user = None, recepient = None, commit=True):
         package = super(EnterPackageInfoForm, self).save(commit=False)
         package.sender_email = user   #PK1 (PK2 is 'id')
-        # package.recepient = recepient #PK3
+        package.recepient_id = recepient #PK3
         package.width = self.cleaned_data['width']
         package.length = self.cleaned_data['length']
         package.height = self.cleaned_data['height']
         package.weight = self.cleaned_data['weight']
         package.metric = self.cleaned_data['metric']
         package.box_count = self.cleaned_data['box_count']
+        package.pkg_type = self.cleaned_data['pkg_type']
+        package.standard_order = self.cleaned_data['standard_order']
 
         if commit:
             package.save()

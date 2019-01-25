@@ -49,7 +49,7 @@ class User(AbstractUser):
     state = USStateField()
     zip_code = USZipCodeField()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone', 'address1', 'first_name', 'last_name', 'city', 'state', 'zip_code']
+    REQUIRED_FIELDS = ['phone', 'first_name', 'last_name', 'address1', 'city', 'state', 'zip_code']
 
     objects = UserManager()
 
@@ -67,12 +67,12 @@ class Recepient(models.Model):
 
 class Package(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
-    # pkg_id = models.IntegerField(primary_key=True)
+    recepient_id = models.IntegerField("받는사람 id")
     pkg_type = models.IntegerField("수업유형", default='1')
     width = models.IntegerField("가로(cm)", default='10')
     length = models.IntegerField("세로(cm)", default='10')
     height = models.IntegerField("높이(cm)", default='10')
     weight = models.IntegerField("중량(lb)", default='2')
     metric = models.IntegerField("중량단위", default='2')
-    box_count = models.IntegerField("Box수량", default='2')
-    standard = models.IntegerField("일반신청", default='0')
+    box_count = models.IntegerField("Box수량", default='1')
+    standard_order = models.IntegerField("일반신청", default='0')

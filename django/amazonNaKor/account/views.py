@@ -33,7 +33,6 @@ def registerRecepient(request):
         recepient_form = EnterRecepientInfoForm(request.POST)
 
         if recepient_form.is_valid():
-            # recepient_form.save(request.user)
             request.session['recepient_form_data'] = recepient_form.cleaned_data
             return HttpResponseRedirect('/account/registerPackage')
     else:
@@ -45,25 +44,22 @@ def registerRecepient(request):
 def registerPackage(request):
     if request.method == 'POST':
         package_form = EnterPackageInfoForm(request.POST)
+        recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
 
-        if package_form.is_valid():
-            package_form.save(request.user)
-            recepient_form = request.session.get('recepient_form_data')
-            recepient_form.save(request.user)
-
-            # return HttpResponseRedirect('/account/registerPackage')
+        if package_form.is_valid() and recepient_form.is_valid():
+            recepient_obj = recepient_form.save(request.user)
+            pkg=package_form.save(user=request.user, recepient=recepient_obj.id) #save 
+            print("recepient id: %s" %pkg.recepient_id)
+            print("pkg id: %s" %pkg.id)
+            
             packages_list=Package.objects.filter(sender_email=request.user)
             return render(request,"account/packages.html",{'packages_list':packages_list})
 
     else:
         package_form = EnterPackageInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
-        name = recepient_form_data['name']
-        phone = recepient_form_data['phone']
-        postal_code = recepient_form_data['postal_code']
-        address = recepient_form_data['address']
-        customs_id = recepient_form_data['customs_id']
-        args = {'package_form': package_form, 'name': name, 'phone': phone, 'postal_code': postal_code, 'address': address, 'customs_id': customs_id}
+
+        args = {'package_form': package_form, 'recepient_form_data': recepient_form_data}
         return render(request, 'account/reg_package_form.html', args)
 
 @login_required

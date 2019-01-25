@@ -4,11 +4,11 @@
 <div class="container">
   <h1>수화물 정보</h1>
   <br>
-  <p>이름: {{ name }}</p>
-  <p>전화번호: {{ phone }}</p>
-  <p>우편번호: {{ postal_code }}</p>
-  <p>주소: {{ address }}</p>
-  <p>통관고유번호: {{ customs_id }}</p>
+  <p>이름: {{ recepient_form_data.name }}</p>
+  <p>전화번호: {{ recepient_form_data.phone }}</p>
+  <p>우편번호: {{ recepient_form_data.postal_code }}</p>
+  <p>주소: {{ recepient_form_data.address }}</p>
+  <p>통관고유번호: {{ recepient_form_data.customs_id }}</p>
   <form method="post">
     {% csrf_token %}
     {{ package_form.as_p }}

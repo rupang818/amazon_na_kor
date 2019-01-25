@@ -10,6 +10,7 @@
     <p><b>발송자 이메일: {{ packages_list.0.sender_email }}</b></p>
     <hr>
     {% for package in packages_list %}
+      <p>받는사람 아이디: {{ package.recepient_id }}</p>
       <p>패키지 고유번호: {{ package.id }}</p>
       <p>가로: {{ package.width }}</p>
       <p>세로: {{ package.length }}</p>
