@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+  <h1>아이템 정보</h1>
+  <br>
+  <form method="post">
+    {% csrf_token %}
+    {{ item_form.as_p }}
+    <button type="next">Submit</button>
+  </form>
+</div>
+{% endblock %}

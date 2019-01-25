@@ -64,7 +64,6 @@ class Recepient(models.Model):
     address = models.CharField("주소", max_length=1024, default='')
     customs_id = models.CharField("통관고유번호", max_length=1024, default='')
 
-
 class Package(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     recepient_id = models.IntegerField("받는사람 id")
@@ -76,3 +75,12 @@ class Package(models.Model):
     metric = models.IntegerField("중량단위", default='2')
     box_count = models.IntegerField("Box수량", default='1')
     standard_order = models.IntegerField("일반신청", default='0')
+
+class Item(models.Model):
+    sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
+    recepient_id = models.IntegerField("받는사람 id")
+    package_id = models.IntegerField("패키지 id")
+    item_name = models.CharField("상품명", max_length=1024, default='')
+    price = models.IntegerField("단가 (USD)", default='0')
+    qty = models.IntegerField("수량", default='1')
+

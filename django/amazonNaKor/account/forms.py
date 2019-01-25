@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Recepient, Package
+from .models import User, Recepient, Package, Item
 
 from localflavor.us.forms import USStateSelect, USZipCodeField
 
@@ -116,3 +116,26 @@ class EnterPackageInfoForm(forms.ModelForm):
         if commit:
             package.save()
         return package
+
+class EnterItemInfoForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = (
+            'item_name',
+            'price',
+            'qty',
+        )
+        unique_together = (("sender_email", "recepient_id", "package_id"),)
+
+    def save(self, user = None, recepient = None, package = None, commit=True):
+        item = super(EnterItemInfoForm, self).save(commit=False)
+        item.sender_email = user   #PK1 (PK2 is 'id')
+        item.recepient_id = recepient #PK3
+        item.package_id = package #PK3
+        item.item_name = self.cleaned_data['item_name']
+        item.price = self.cleaned_data['price']
+        item.qty = self.cleaned_data['qty']
+
+        if commit:
+            item.save()
+        return item

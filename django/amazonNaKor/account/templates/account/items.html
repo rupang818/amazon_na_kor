@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>아이템</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1>아이템 정보</h1>
+    <p><b>발송자 이메일: {{ items_list.0.sender_email }}</b></p>
+    <hr>
+    {% for item in items_list %}
+      <p>받는사람 아이디: {{ item.recepient_id }}</p>
+      <p>패키지 고유번호: {{ item.package_id }}</p>
+      <p>상품명: {{ item.item_name }}</p>
+      <p>단가 (USD): {{ item.price }}</p>
+      <p>수량: {{ item.qty }}</p>
+      <hr>
+    {% endfor %}
+
+</div>
+{% endblock %}

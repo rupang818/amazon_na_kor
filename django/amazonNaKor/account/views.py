@@ -5,8 +5,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 
-from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm
-from .models import User, Recepient, Package
+from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm, EnterItemInfoForm
+from .models import User, Recepient, Package, Item
 
 def register(request):
     if request.method == 'POST':
@@ -44,16 +44,17 @@ def registerRecepient(request):
 def registerPackage(request):
     if request.method == 'POST':
         package_form = EnterPackageInfoForm(request.POST)
-        recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
+        # recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
 
-        if package_form.is_valid() and recepient_form.is_valid():
-            recepient_obj = recepient_form.save(request.user)
-            pkg=package_form.save(user=request.user, recepient=recepient_obj.id) #save 
-            print("recepient id: %s" %pkg.recepient_id)
-            print("pkg id: %s" %pkg.id)
-            
-            packages_list=Package.objects.filter(sender_email=request.user)
-            return render(request,"account/packages.html",{'packages_list':packages_list})
+        if package_form.is_valid():
+            # recepient_obj = recepient_form.save(request.user)
+            # package_obj=package_form.save(user=request.user, recepient=recepient_obj.id) #save 
+
+            request.session['recepient_form_data'] = request.session.get('recepient_form_data')
+            request.session['package_form_data'] = package_form.cleaned_data
+            return HttpResponseRedirect('/account/registerItem')
+            # packages_list=Package.objects.filter(sender_email=request.user)
+            # return render(request,"account/packages.html",{'packages_list':packages_list})
 
     else:
         package_form = EnterPackageInfoForm()
@@ -61,6 +62,29 @@ def registerPackage(request):
 
         args = {'package_form': package_form, 'recepient_form_data': recepient_form_data}
         return render(request, 'account/reg_package_form.html', args)
+
+@login_required
+def registerItem(request):
+    if request.method == 'POST':
+        item_form = EnterItemInfoForm(request.POST)
+        recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
+        package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
+
+        if item_form.is_valid():
+            recepient_obj = recepient_form.save(request.user)
+            package_obj = package_form.save(user=request.user, recepient=recepient_obj.id) #save 
+            item_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
+
+            
+            items_list=Item.objects.filter(sender_email=request.user)
+            return render(request,"account/items.html",{'items_list':items_list})
+    else:
+        item_form = EnterItemInfoForm()
+        recepient_form_data = request.session.get('recepient_form_data')
+        package_form_data = request.session.get('package_form_data')
+
+        args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        return render(request, 'account/reg_item_form.html', args)
 
 @login_required
 def view_profile(request):
@@ -78,6 +102,12 @@ def view_packages(request):
     user=request.user
     packages_list=Package.objects.filter(sender_email=user)
     return render(request,"account/packages.html",{'packages_list':packages_list})
+
+@login_required
+def view_items(request):
+    user=request.user
+    items_list=Item.objects.filter(sender_email=user)
+    return render(request,"account/items.html",{'items_list':items_list})
 
 @login_required
 def edit_profile(request):

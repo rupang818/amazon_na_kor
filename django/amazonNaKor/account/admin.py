@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
-from .models import User, Recepient, Package
+from .models import User, Recepient, Package, Item
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -26,3 +26,4 @@ class UserAdmin(DjangoUserAdmin):
 
 admin.site.register(Recepient)
 admin.site.register(Package)
+admin.site.register(Item)
