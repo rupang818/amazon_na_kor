@@ -42,11 +42,11 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None # Don't use the username - instead, authenticate using email
     email = models.EmailField(_('email address'), unique=True)
-    phone = models.IntegerField("Phone", default=12345678)
+    phone = models.IntegerField("Phone", default='')
     address1 = models.CharField("Address 1", max_length=1024, default='')
     address2 = models.CharField("Address 2", max_length=1024, default='', blank=True)
     city = models.CharField("City", max_length=1024, default='')
-    state = USStateField()
+    state = USStateField(default='CA')
     zip_code = USZipCodeField()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone', 'first_name', 'last_name', 'address1', 'city', 'state', 'zip_code']

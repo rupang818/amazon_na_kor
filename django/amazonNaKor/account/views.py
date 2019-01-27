@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
@@ -14,14 +14,14 @@ def register(request):
 
         if form.is_valid():
             form.save()
-            # TODO: make sure to auto-login after registering
-            # #get the username and password
-            # email = self.request.POST['email']
-            # password = self.request.POST['password1']
-            # #authenticate user then login
-            # email = authenticate(username=username, password=password)
-            # login(self.request, user)
+                        
+            # Log-in automatically once registered
+            email = request.POST['email']
+            password = request.POST['password1']
+            user = authenticate(username=email, password=password)
+            login(request, user)
             return HttpResponseRedirect('/account/')
+
     else:
         form = RegistrationForm()
         args = {'form': form}
@@ -31,6 +31,8 @@ def register(request):
 def registerRecepient(request):
     if request.method == 'POST':
         recepient_form = EnterRecepientInfoForm(request.POST)
+        # TODO (V2 - 주소록): check for any existing recepients
+        #Recepient.objects.filter(sender_email=user, ...)
 
         if recepient_form.is_valid():
             request.session['recepient_form_data'] = recepient_form.cleaned_data
@@ -44,17 +46,11 @@ def registerRecepient(request):
 def registerPackage(request):
     if request.method == 'POST':
         package_form = EnterPackageInfoForm(request.POST)
-        # recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
 
         if package_form.is_valid():
-            # recepient_obj = recepient_form.save(request.user)
-            # package_obj=package_form.save(user=request.user, recepient=recepient_obj.id) #save 
-
             request.session['recepient_form_data'] = request.session.get('recepient_form_data')
             request.session['package_form_data'] = package_form.cleaned_data
             return HttpResponseRedirect('/account/registerItem')
-            # packages_list=Package.objects.filter(sender_email=request.user)
-            # return render(request,"account/packages.html",{'packages_list':packages_list})
 
     else:
         package_form = EnterPackageInfoForm()
@@ -75,9 +71,9 @@ def registerItem(request):
             package_obj = package_form.save(user=request.user, recepient=recepient_obj.id) #save 
             item_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
 
-            
             items_list=Item.objects.filter(sender_email=request.user)
             return render(request,"account/items.html",{'items_list':items_list})
+            # TODO: show confirmation page
     else:
         item_form = EnterItemInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
