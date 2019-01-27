@@ -79,7 +79,6 @@ class EnterRecepientInfoForm(forms.ModelForm):
         recepient.address = self.cleaned_data['address']
         recepient.customs_id = self.cleaned_data['customs_id']
 
-
         if commit:
             recepient.save()
         return recepient
@@ -141,13 +140,12 @@ class EnterItemInfoForm(forms.ModelForm):
         return item
 
 class EnterDeliveryInfoForm(forms.ModelForm):
-    agreement_signed = forms.BooleanField()
-    
     class Meta:
         model = Delivery
         fields = (
             'customs_fee_payee',
-            'method'
+            'method',
+            'agreement_signed',
         )
 
     def save(self, user = None, recepient = None, package = None, item = None, commit=True):
@@ -155,12 +153,22 @@ class EnterDeliveryInfoForm(forms.ModelForm):
         delivery.sender_email = user
         delivery.recepient_id = recepient
         delivery.package_id = package
+        delivery.item_id = item
         delivery.customs_fee_payee = self.cleaned_data['customs_fee_payee']
         delivery.method = self.cleaned_data['method']
         delivery.agreement_signed = self.cleaned_data['agreement_signed']
 
+        # Calculate the estimated cost
+        _pkg_obj_list=Package.objects.filter(id=package)
+        _weight=_pkg_obj_list[0].weight
+        delivery.estimate = 8.5 + _weight * 1.5 
+        if delivery.customs_fee_payee == 'RECEPIENT':
+            delivery.estimate += 5.0
+        if delivery.method == 'UPS':
+            delivery.estimate += 10.0
+
         if commit:
             delivery.save()
-        return item
+        return delivery
 
 

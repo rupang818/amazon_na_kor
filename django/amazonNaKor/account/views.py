@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 
 from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm, EnterItemInfoForm, EnterDeliveryInfoForm
-from .models import User, Recepient, Package, Item
+from .models import User, Recepient, Package, Item, Delivery
 
 def register(request):
     if request.method == 'POST':
@@ -84,16 +84,15 @@ def registerDelivery(request):
         item_form = EnterItemInfoForm(request.session.get('item_form_data'))
         recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
         package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
+        # TODO: don't proceed until the agreement_signed is true - also send reminder to user, if not clicked
 
-        if item_form.is_valid():
+        if delivery_form.is_valid():
             recepient_obj = recepient_form.save(request.user)
             package_obj = package_form.save(user=request.user, recepient=recepient_obj.id) #save 
-            item_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
-            delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id, item=item_obj.id)
+            item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
+            delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id, item=item_obj.id)
 
-            items_list=Item.objects.filter(sender_email=request.user)
-            return render(request,"account/items.html",{'items_list':items_list})
-            # TODO: show confirmation page
+            return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj})
     else:
         delivery_form = EnterDeliveryInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
@@ -123,8 +122,19 @@ def view_packages(request):
 @login_required
 def view_items(request):
     user=request.user
+    item_list=Item.objects.filter(sender_email=user)
+    return render(request,"account/items.html",{'item_list':item_list})
+
+@login_required
+def view_items(request):
+    user=request.user
     items_list=Item.objects.filter(sender_email=user)
     return render(request,"account/items.html",{'items_list':items_list})
+
+@login_required
+def view_order_summary(request):
+    args = {'user': request.user}
+    return render(request, 'account/order_summary.html', args)
 
 @login_required
 def edit_profile(request):

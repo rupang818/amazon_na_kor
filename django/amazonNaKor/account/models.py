@@ -86,8 +86,8 @@ class Item(models.Model):
 
 class Delivery(models.Model):
     payee = (
-        ('RECEPIENT', '수취인 납부'),
-        ('SENDER', '송하인 납부 (+ $5.00)'),
+        ('SENDER', '송하인(sender) 납부'),
+        ('RECEPIENT', '수취인 납부 (+ $5.00)'),
     )
     method = (
         ('DIRECT', '직접방문'),
@@ -97,6 +97,7 @@ class Delivery(models.Model):
     recepient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
     item_id = models.IntegerField("아이템 id")
-    customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='RECEPIENT')
-    method = models.IntegerField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
+    customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='SENDER')
+    method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
     agreement_signed = models.BooleanField("위 사항에 동의합니다")
+    estimate = models.IntegerField("Estimated Price")
