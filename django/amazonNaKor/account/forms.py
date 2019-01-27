@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Recepient, Package, Item
+from .models import User, Recepient, Package, Item, Delivery
 
 from localflavor.us.forms import USStateSelect, USZipCodeField
 
@@ -139,3 +139,28 @@ class EnterItemInfoForm(forms.ModelForm):
         if commit:
             item.save()
         return item
+
+class EnterDeliveryInfoForm(forms.ModelForm):
+    agreement_signed = forms.BooleanField()
+    
+    class Meta:
+        model = Delivery
+        fields = (
+            'customs_fee_payee',
+            'method'
+        )
+
+    def save(self, user = None, recepient = None, package = None, item = None, commit=True):
+        delivery = super(EnterDeliveryInfoForm, self).save(commit=False)
+        delivery.sender_email = user
+        delivery.recepient_id = recepient
+        delivery.package_id = package
+        delivery.customs_fee_payee = self.cleaned_data['customs_fee_payee']
+        delivery.method = self.cleaned_data['method']
+        delivery.agreement_signed = self.cleaned_data['agreement_signed']
+
+        if commit:
+            delivery.save()
+        return item
+
+

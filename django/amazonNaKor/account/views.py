@@ -5,7 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 
-from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm, EnterItemInfoForm
+from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm, EnterItemInfoForm, EnterDeliveryInfoForm
 from .models import User, Recepient, Package, Item
 
 def register(request):
@@ -14,7 +14,7 @@ def register(request):
 
         if form.is_valid():
             form.save()
-                        
+
             # Log-in automatically once registered
             email = request.POST['email']
             password = request.POST['password1']
@@ -63,17 +63,12 @@ def registerPackage(request):
 def registerItem(request):
     if request.method == 'POST':
         item_form = EnterItemInfoForm(request.POST)
-        recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
-        package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
 
         if item_form.is_valid():
-            recepient_obj = recepient_form.save(request.user)
-            package_obj = package_form.save(user=request.user, recepient=recepient_obj.id) #save 
-            item_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
-
-            items_list=Item.objects.filter(sender_email=request.user)
-            return render(request,"account/items.html",{'items_list':items_list})
-            # TODO: show confirmation page
+            request.session['recepient_form_data'] = request.session.get('recepient_form_data')
+            request.session['package_form_data'] = request.session.get('package_form_data')
+            request.session['item_form_data'] = item_form.cleaned_data
+            return HttpResponseRedirect('/account/registerDelivery')
     else:
         item_form = EnterItemInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
@@ -81,6 +76,32 @@ def registerItem(request):
 
         args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
         return render(request, 'account/reg_item_form.html', args)
+
+@login_required
+def registerDelivery(request):
+    if request.method == 'POST':
+        delivery_form = EnterDeliveryInfoForm(request.POST)
+        item_form = EnterItemInfoForm(request.session.get('item_form_data'))
+        recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
+        package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
+
+        if item_form.is_valid():
+            recepient_obj = recepient_form.save(request.user)
+            package_obj = package_form.save(user=request.user, recepient=recepient_obj.id) #save 
+            item_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
+            delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id, item=item_obj.id)
+
+            items_list=Item.objects.filter(sender_email=request.user)
+            return render(request,"account/items.html",{'items_list':items_list})
+            # TODO: show confirmation page
+    else:
+        delivery_form = EnterDeliveryInfoForm()
+        recepient_form_data = request.session.get('recepient_form_data')
+        package_form_data = request.session.get('package_form_data')
+        item_form_data = request.session.get('item_form_data')
+
+        args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        return render(request, 'account/reg_delivery_form.html', args)
 
 @login_required
 def view_profile(request):

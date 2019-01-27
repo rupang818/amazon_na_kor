@@ -1,13 +1,27 @@
 {% extends 'base.html' %}
 
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'account/style.css' %}">
+
 {% block body %}
 <div class="container">
   <h1>Register</h1>
-  <br>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-  </form>
+  <div class="card-deck">
+    <div class="card bg-dark text-white">
+      <div class="card-header text-center"><h4>주의사항</h4></div>
+      <div class="card-body"> 보내는 사람 정보는 차후 발송시 문제가 발견되었을때 정보를 확인하기위해 명확하게 기입해주세요. 이메일 주소는 배송정보 등 안내문이 전달되기 위한 정보임으로 필수로 입력해주세요</div>
+    </div>
+
+    <div class="card bg-light text-dark">
+      <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+          <button type="submit">Submit</button>
+          </form>
+      </div>
+      <br>
+    </div>
+  </div>
 </div>
 {% endblock %}

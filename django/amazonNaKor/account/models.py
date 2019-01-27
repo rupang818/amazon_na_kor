@@ -62,7 +62,7 @@ class Recepient(models.Model):
     phone = models.IntegerField("전화번호", default='')
     postal_code = models.IntegerField("우편번호", default='')
     address = models.CharField("주소", max_length=1024, default='')
-    customs_id = models.CharField("통관고유번호", max_length=1024, default='')
+    customs_id = models.CharField("통관고유호", max_length=1024, default='')
 
 class Package(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
@@ -84,3 +84,19 @@ class Item(models.Model):
     price = models.IntegerField("단가 (USD)", default='0')
     qty = models.IntegerField("수량", default='1')
 
+class Delivery(models.Model):
+    payee = (
+        ('RECEPIENT', '수취인 납부'),
+        ('SENDER', '송하인 납부 (+ $5.00)'),
+    )
+    method = (
+        ('DIRECT', '직접방문'),
+        ('UPS', 'UPS 배송 (+ $10.00)'),
+    )
+    sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
+    recepient_id = models.IntegerField("받는사람 id")
+    package_id = models.IntegerField("패키지 id")
+    item_id = models.IntegerField("아이템 id")
+    customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='RECEPIENT')
+    method = models.IntegerField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
+    agreement_signed = models.BooleanField("위 사항에 동의합니다")

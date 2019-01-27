@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+  <h1>배달정보</h1>
+  <div class="card-deck">
+    <div class="card bg-dark text-white">
+      <div class="card-header text-center"><h4>전자서명</h4></div>
+      <div class="card-body">작성된 서류의 모든 권한은 송하인(sender)에게 있으며, 잘못된 기입 혹은 허위 기록으로 인해 발생하는 문제에 대해 직접 해결 할 것을 약속합니다.
+        <br>
+        <br>
+          <form method="post">
+            {% csrf_token %}
+            {{ delivery_form.agreement_signed }} 위 사항에 동의합니다
+          </form>
+          </div>
+    </div>
+
+    <div class="card bg-light text-dark">
+      <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <p>{{ delivery_form.customs_fee_payee }}</p>
+            <p>{{ delivery_form.method }}</p>
+            <button type="next">Submit</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

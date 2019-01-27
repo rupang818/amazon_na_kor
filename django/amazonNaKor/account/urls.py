@@ -14,6 +14,7 @@ urlpatterns = [
     path('registerRecepient', views.registerRecepient, name='registerRecepient'),
     path('registerPackage', views.registerPackage, name='registerPackage'),
     path('registerItem', views.registerItem, name='registerItem'),
+    path('registerDelivery', views.registerDelivery, name='registerDelivery'),
     path('profile', views.view_profile, name='view_profile'),
     path('profile/edit', views.edit_profile, name='edit_profile'),
     path('view_recepients', views.view_recepients, name='view_recepients'),

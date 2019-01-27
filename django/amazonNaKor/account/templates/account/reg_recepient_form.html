@@ -3,11 +3,21 @@
 {% block body %}
 <div class="container">
   <h1>받는 사람 정보</h1>
-  <br>
-  <form method="post">
-    {% csrf_token %}
-    {{ recepient_form.as_p }}
-    <button type="next">다음</button>
-  </form>
+  <div class="card-deck">
+    <div class="card bg-dark text-white">
+      <div class="card-header text-center"><h4>주의사항</h4></div>
+      <div class="card-body"><u>통관고유부호, 혹은 주민번호는 필수사항입니다.</u> 통관 고유부호가 입력되지 않을경우, 통관에 지연이 발생할 수 있습니다</div>
+    </div>
+
+    <div class="card bg-light text-dark">
+      <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ recepient_form.as_p }}
+            <button type="next">다음</button>
+          </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

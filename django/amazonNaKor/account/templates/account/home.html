@@ -7,7 +7,10 @@
 {% block body %}
 <div class="container">
     <p>
-        <h1>Home</h1>
+        <h3>일반/귀국 택배 요율표</h3>
+        {% load static %}
+        <img src="{% static "account/price_chart.png" %}" alt="Price Chart">
+        <!-- TODO: provide TV요율표 -->
     </p>
 </div>
 {% endblock %}
