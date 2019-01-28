@@ -85,6 +85,9 @@ class Item(models.Model):
     qty = models.IntegerField("수량", default='1')
 
 class Delivery(models.Model):
+    class Meta:
+        verbose_name_plural = "deliveries"
+
     payee = (
         ('SENDER', '송하인(sender) 납부'),
         ('RECEPIENT', '수취인 납부 (+ $5.00)'),
