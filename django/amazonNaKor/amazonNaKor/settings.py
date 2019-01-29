@@ -125,6 +125,10 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/account/'
 
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sf.rocket.master@gmail.com'
+EMAIL_HOST_PASSWORD = 'sfrocket123'
+
 AUTH_USER_MODEL = 'account.User'
