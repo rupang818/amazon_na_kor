@@ -4,7 +4,8 @@ from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm, EnterItemInfoForm, EnterDeliveryInfoForm
 from .models import User, Recepient, Package, Item, Delivery
@@ -93,11 +94,14 @@ def registerDelivery(request):
             item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
             delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id, item=item_obj.id)
 
-            send_mail('Your order has been placed - Order number: ' + str(delivery_obj.id),
-                        '물품을 아래 주소지로 드랍해주세요: 1914 Junction ave. San Jose CA 95131',
-                        'sf.rocket.master@gmail.com',
-                        [request.user.email],
-                        fail_silently=False)
+            msg = EmailMessage(
+                       'Your order has been placed',
+                       '<strong>Order number:</strong> ' + str(delivery_obj.id) + '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + '<br><br>물품을 아래 주소지로 드랍해주세요: <br>1914 Junction ave. San Jose CA 95131',
+                       'sf.rocket.master@gmail.com',
+                       [request.user.email],
+                  )
+            msg.content_subtype = "html"
+            msg.send()
 
             return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj})
     else:
