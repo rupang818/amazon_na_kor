@@ -46,7 +46,7 @@ class User(AbstractUser):
     address1 = models.CharField("Address 1", max_length=1024, default='')
     address2 = models.CharField("Address 2", max_length=1024, default='', blank=True)
     city = models.CharField("City", max_length=1024, default='')
-    state = USStateField(default='CA')
+    state = USStateField(default='CA')  
     zip_code = USZipCodeField()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone', 'first_name', 'last_name', 'address1', 'city', 'state', 'zip_code']
@@ -71,7 +71,7 @@ class Package(models.Model):
     width = models.IntegerField("가로(cm)", default='10')
     length = models.IntegerField("세로(cm)", default='10')
     height = models.IntegerField("높이(cm)", default='10')
-    weight = models.IntegerField("중량(lb)", default='2')
+    weight = models.IntegerField("중량(lb)", default='1')
     metric = models.IntegerField("중량단위", default='2')
     box_count = models.IntegerField("Box수량", default='1')
     standard_order = models.IntegerField("일반신청", default='0')

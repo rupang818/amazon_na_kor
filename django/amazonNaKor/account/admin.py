@@ -24,7 +24,41 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
-admin.site.register(Recepient)
-admin.site.register(Package)
-admin.site.register(Item)
-admin.site.register(Delivery)
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export Selected"
+
+@admin.register(Recepient)
+class RecepientAdmin(admin.ModelAdmin):
+    list_display = [i.name for i in Recepient._meta.get_fields()]
+    actions = ["export_as_csv"]
+
+@admin.register(Package)
+class PackageAdmin(admin.ModelAdmin):
+    list_display = [i.name for i in Package._meta.get_fields()]
+    actions = ["export_as_csv"]
+
+
+@admin.register(Item)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = [i.name for i in Item._meta.get_fields()]
+    actions = ["export_as_csv"]
+
+@admin.register(Delivery)
+class DeliveryAdmin(admin.ModelAdmin):
+    list_display = [i.name for i in Delivery._meta.get_fields()]
+    actions = ["export_as_csv"]
