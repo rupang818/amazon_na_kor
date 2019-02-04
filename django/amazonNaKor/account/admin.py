@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
 from .models import User, Recepient, Package, Item, Delivery
+from import_export.admin import ImportExportModelAdmin
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -24,6 +25,7 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
+# Selective export
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
 
@@ -43,22 +45,22 @@ class ExportCsvMixin:
     export_as_csv.short_description = "Export Selected"
 
 @admin.register(Recepient)
-class RecepientAdmin(admin.ModelAdmin):
+class RecepientAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Recepient._meta.get_fields()]
     actions = ["export_as_csv"]
 
 @admin.register(Package)
-class PackageAdmin(admin.ModelAdmin):
+class PackageAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Package._meta.get_fields()]
     actions = ["export_as_csv"]
 
 
 @admin.register(Item)
-class ItemAdmin(admin.ModelAdmin):
+class ItemAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Item._meta.get_fields()]
     actions = ["export_as_csv"]
 
 @admin.register(Delivery)
-class DeliveryAdmin(admin.ModelAdmin):
+class DeliveryAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Delivery._meta.get_fields()]
     actions = ["export_as_csv"]
