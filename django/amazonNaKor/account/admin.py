@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
-from .models import User, Recepient, Package, Item, Delivery
+from .models import *
 from import_export.admin import ImportExportModelAdmin
 
 @admin.register(User)
@@ -53,7 +53,6 @@ class RecepientAdmin(ImportExportModelAdmin):
 class PackageAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Package._meta.get_fields()]
     actions = ["export_as_csv"]
-
 
 @admin.register(Item)
 class ItemAdmin(ImportExportModelAdmin):

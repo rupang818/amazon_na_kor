@@ -1,14 +1,14 @@
+import csv
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.sessions.models import Session
-# from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 
-from .forms import RegistrationForm, EditProfileForm, EnterRecepientInfoForm, EnterPackageInfoForm, EnterItemInfoForm, EnterDeliveryInfoForm
-from .models import User, Recepient, Package, Item, Delivery
+from .forms import *
+from .models import *
 
 def register(request):
     if request.method == 'POST':
@@ -179,3 +179,44 @@ def change_password(request):
 # TODO: if registered, allow. Otherwise, direct to register.html
 def home(request):
     return render(request, 'account/home.html')
+
+
+@permission_required('admin.can_add_log_entry')
+def download_csv(request):
+    users = User.objects.all()
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="orders.csv"'
+
+    writer = csv.writer(response, delimiter=',')
+    writer.writerow(['번호', '보내는 사람 이름', '보내는 사람 전화', '보내는 사람 주소', '관리번호',
+                     '받는사람 이름', '받는사람 전화', '받는사람 휴대폰', '받는사람 우편번호', '받는사람 주소', '받는사람 상세주소', '통관고유번호', '배송메모', '구분',
+                     '수업유형', '판매 site URL', '가로(Cm)', '세로(Cm)', '높이(Cm)', '중량', '중량단위(1:Kg, 2:Lbs)', 'Box수량', '일반신청', '통관지정번호', '체결번호',
+                     '상품명', '브랜드', '단가(USD)', '수량', '상품코드', 'HS코드',
+                     'Email', 'Payable$', 'Custom', 'Type', 'Receive', 'Remark', 'PMT STTS'])
+
+    for user in users:
+        # User information
+        sender_name = user.first_name + ' '+ user.last_name
+        sender_phone = user.phone
+        sender_address = ", ".join([" ".join([user.address1, user.address2]), user.city, user.state, user.zip_code])
+
+        recepients_list = Recepient.objects.filter(sender_email=user)
+        for recepient in recepients_list:
+            packages_list = Package.objects.filter(sender_email=user, recepient_id=recepient.id)
+            for package in packages_list:
+                items_list = Item.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id)
+                for item in items_list:
+                    deliveries_list = Delivery.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id, item_id=item.id)
+                    for delivery in deliveries_list:
+                        writer.writerow([delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
+                                        recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',
+                                        package.pkg_type, '', package.width, package.length, package.height, package.weight, package.metric, package.box_count, package.standard_order, '', '',
+                                        item.item_name, '', item.price, item.qty, '', '',
+                                        user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', ''])
+
+    return response
+
+
+
+

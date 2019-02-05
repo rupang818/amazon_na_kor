@@ -25,4 +25,5 @@ urlpatterns = [
     path('reset-password/done', PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset-password/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset-password/complete', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('download-csv/', views.download_csv, name='download_csv'),
 ]
