@@ -104,6 +104,15 @@ def registerDelivery(request):
             msg.send()
 
             return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj})
+        else:
+            recepient_form_data = request.session.get('recepient_form_data')
+            package_form_data = request.session.get('package_form_data')
+            item_form_data = request.session.get('item_form_data')
+
+            args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+            print(delivery_form.errors)
+            return render(request, 'account/reg_delivery_form.html', args)
+            
     else:
         delivery_form = EnterDeliveryInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')

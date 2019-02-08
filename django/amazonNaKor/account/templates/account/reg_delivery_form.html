@@ -13,6 +13,11 @@
             {% csrf_token %}
             {{ delivery_form.agreement_signed }} 위 사항에 동의합니다
           </form>
+
+            <div class="alert alert-danger" role="alert">
+              {% load static %}
+              <strong><img src="{% static "account/warning.svg" %}" alt="warning" width="20" height="20">{{ delivery_form.errors.agreement_signed | striptags }}</strong>
+            </div>
           </div>
     </div>
 
