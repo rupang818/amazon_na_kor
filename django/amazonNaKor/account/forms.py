@@ -149,7 +149,6 @@ class EnterDeliveryInfoForm(forms.ModelForm):
         )
     def clean_agreement_signed(self):
         agreement_signed = self.cleaned_data['agreement_signed']
-        print(agreement_signed)
         if agreement_signed == False:
             raise forms.ValidationError("\"위 사항에 동의합니다\"를 클릭해주세요 (Agreement must be acknowledged)", code='invalid')
         return agreement_signed
@@ -164,6 +163,8 @@ class EnterDeliveryInfoForm(forms.ModelForm):
         delivery.customs_fee_payee = self.cleaned_data['customs_fee_payee']
         delivery.method = self.cleaned_data['method']
         delivery.agreement_signed = self.cleaned_data['agreement_signed']
+        delivery.dropped_off = False
+        delivery.sent = False
 
 
         # Calculate the estimated cost

@@ -104,3 +104,5 @@ class Delivery(models.Model):
     method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
     agreement_signed = models.BooleanField("위 사항에 동의합니다")
     estimate = models.FloatField("Estimated Price")
+    dropped_off = models.BooleanField(blank=True)
+    sent = models.BooleanField(blank=True)
