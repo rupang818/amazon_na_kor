@@ -202,7 +202,7 @@ def download_csv(request):
                      '받는사람 이름', '받는사람 전화', '받는사람 휴대폰', '받는사람 우편번호', '받는사람 주소', '받는사람 상세주소', '통관고유번호', '배송메모', '구분',
                      '수업유형', '판매 site URL', '가로(Cm)', '세로(Cm)', '높이(Cm)', '중량', '중량단위(1:Kg, 2:Lbs)', 'Box수량', '일반신청', '통관지정번호', '체결번호',
                      '상품명', '브랜드', '단가(USD)', '수량', '상품코드', 'HS코드',
-                     'Email', 'Payable$', 'Custom', 'Type', 'Receive', 'Remark', 'PMT STTS', 'Dropped Off?', 'Fulfilled?'])
+                     'Email', 'Payable($)', 'Custom', 'Type', 'Receive', 'Remark', 'PMT STTS', 'Dropped Off?', 'Fulfilled?'])
 
     for user in users:
         # User information
