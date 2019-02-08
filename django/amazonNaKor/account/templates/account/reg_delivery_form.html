@@ -12,8 +12,6 @@
           <form method="post">
             {% csrf_token %}
             {{ delivery_form.agreement_signed }} 위 사항에 동의합니다
-          </form>
-
             <div class="alert alert-danger" role="alert">
               {% load static %}
               <strong><img src="{% static "account/warning.svg" %}" alt="warning" width="20" height="20">{{ delivery_form.errors.agreement_signed | striptags }}</strong>
@@ -23,7 +21,7 @@
 
     <div class="card bg-light text-dark">
       <div class="card-body">
-          <form method="post">
+
             {% csrf_token %}
             <p>{{ delivery_form.customs_fee_payee }}</p>
             <p>{{ delivery_form.method }}</p>

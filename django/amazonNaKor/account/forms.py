@@ -149,7 +149,8 @@ class EnterDeliveryInfoForm(forms.ModelForm):
         )
     def clean_agreement_signed(self):
         agreement_signed = self.cleaned_data['agreement_signed']
-        if not agreement_signed:
+        print(agreement_signed)
+        if agreement_signed == False:
             raise forms.ValidationError("\"위 사항에 동의합니다\"를 클릭해주세요 (Agreement must be acknowledged)", code='invalid')
         return agreement_signed
 
