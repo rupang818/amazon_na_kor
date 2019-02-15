@@ -96,7 +96,11 @@ def registerDelivery(request):
 
             msg = EmailMessage(
                        'Your order has been placed',
-                       '<strong>Order number:</strong> ' + str(delivery_obj.id) + '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + '<br><br>물품을 아래 주소지로 드랍해주세요: <br>1914 Junction ave. San Jose CA 95131',
+                       '<strong>Order number:</strong> ' + str(delivery_obj.id) + \
+                       '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + \
+                       '<br><br>저희 서비스를 이용해주셔서 감사합니다. 배송을 원하시는 날자에 아래의 주소지로 물품을 가져와 주세요: <br><strong>1914 Junction ave. San Jose CA 95131</strong>' + \
+                       '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
+                       '<br><br>영업일은 국가 공휴일 제외 월-금 아침 9시부터 오후 5시까지 입니다 (점심시간: 12시-1시). 결제는 cash or check only 입니다.',
                        'sf.rocket.master@gmail.com',
                        [request.user.email],
                   )
@@ -189,6 +193,8 @@ def change_password(request):
 def home(request):
     return render(request, 'account/home.html')
 
+def findus(request):
+    return render(request, 'account/findus.html')
 
 @permission_required('admin.can_add_log_entry')
 def download_csv(request):

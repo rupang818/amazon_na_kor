@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Find Us</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <p>
+        <h3>찾아오시는 길</h3>
+        {% load static %}
+        <!-- TODO: provide TV요율표 -->
+        <iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>
+    </p>
+</div>
+{% endblock %}
