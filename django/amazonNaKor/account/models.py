@@ -76,6 +76,13 @@ class Package(models.Model):
     box_count = models.IntegerField("Box수량", default='1')
     standard_order = models.IntegerField("일반신청", default='0')
 
+    @classmethod
+    def create(cls, _sender_email, _recepient_id):
+        print("Creating a default package instance")
+        pkg = cls(sender_email=_sender_email, recepient_id=_recepient_id, pkg_type=1, width=10, length=10, height=10, weight=1, metric=2, box_count=1, standard_order=0)
+        pkg.save()
+        return pkg
+
 class Item(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     recepient_id = models.IntegerField("받는사람 id")

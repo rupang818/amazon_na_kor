@@ -38,11 +38,14 @@ def registerRecepient(request):
 
         if recepient_form.is_valid():
             request.session['recepient_form_data'] = recepient_form.cleaned_data
-            return HttpResponseRedirect('/account/registerPackage')
+            # TODO (V2 - 귀국배송)
+            # return HttpResponseRedirect('/account/registerPackage')
+            return HttpResponseRedirect('/account/registerItem')
     else:
         recepient_form = EnterRecepientInfoForm()
         args = {'recepient_form': recepient_form}
         return render(request, 'account/reg_recepient_form.html', args)
+
 
 @login_required
 def registerPackage(request):
@@ -68,15 +71,17 @@ def registerItem(request):
 
         if item_form.is_valid():
             request.session['recepient_form_data'] = request.session.get('recepient_form_data')
-            request.session['package_form_data'] = request.session.get('package_form_data')
+            # TODO (V2 - 귀국배송)
+            # request.session['package_form_data'] = request.session.get('package_form_data')
             request.session['item_form_data'] = item_form.cleaned_data
             return HttpResponseRedirect('/account/registerDelivery')
     else:
         item_form = EnterItemInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
-        package_form_data = request.session.get('package_form_data')
-
-        args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        # TODO (V2 - 귀국배송)
+        # package_form_data = request.session.get('package_form_data')
+        # args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        args = {'item_form': item_form, 'recepient_form_data': recepient_form_data}
         return render(request, 'account/reg_item_form.html', args)
 
 @login_required
@@ -85,14 +90,16 @@ def registerDelivery(request):
         delivery_form = EnterDeliveryInfoForm(request.POST)
         item_form = EnterItemInfoForm(request.session.get('item_form_data'))
         recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
-        package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
-        # TODO: don't proceed until the agreement_signed is true - also send reminder to user, if not clicked
+        # TODO (V2 - 귀국배송)
+        # package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
 
         if delivery_form.is_valid():
             recepient_obj = recepient_form.save(request.user)
-            package_obj = package_form.save(user=request.user, recepient=recepient_obj.id) #save 
-            item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id)
-            delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=package_obj.id, item=item_obj.id)
+
+            # V1 - save the default values for the pkg
+            pkg_default_obj = Package.create(request.user, recepient_obj.id)
+            item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
+            delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, item=item_obj.id)
 
             msg = EmailMessage(
                        'Your order has been placed',
@@ -110,20 +117,26 @@ def registerDelivery(request):
             return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj})
         else:
             recepient_form_data = request.session.get('recepient_form_data')
-            package_form_data = request.session.get('package_form_data')
+            # TODO (V2 - 귀국배송)
+            # package_form_data = request.session.get('package_form_data')
             item_form_data = request.session.get('item_form_data')
 
-            args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+            # TODO (V2 - 귀국배송)
+            # args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+            args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'recepient_form_data': recepient_form_data}
             print(delivery_form.errors)
             return render(request, 'account/reg_delivery_form.html', args)
             
     else:
         delivery_form = EnterDeliveryInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
-        package_form_data = request.session.get('package_form_data')
+        # TODO (V2 - 귀국배송)
+        # package_form_data = request.session.get('package_form_data')
         item_form_data = request.session.get('item_form_data')
 
-        args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        # TODO (V2 - 귀국배송)
+        # args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'recepient_form_data': recepient_form_data}
         return render(request, 'account/reg_delivery_form.html', args)
 
 @login_required
