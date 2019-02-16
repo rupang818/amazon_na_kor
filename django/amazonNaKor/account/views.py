@@ -67,21 +67,25 @@ def registerPackage(request):
 @login_required
 def registerItem(request):
     if request.method == 'POST':
-        item_form = EnterItemInfoForm(request.POST)
+        # item_form = EnterItemInfoForm(request.POST)
+        item_formset = ItemInfoFormset(request.POST)
 
-        if item_form.is_valid():
-            request.session['recepient_form_data'] = request.session.get('recepient_form_data')
-            # TODO (V2 - 귀국배송)
-            # request.session['package_form_data'] = request.session.get('package_form_data')
-            request.session['item_form_data'] = item_form.cleaned_data
+        # if item_form.is_valid():
+        if item_formset.is_valid():
+            for item_form in item_formset:
+                request.session['recepient_form_data'] = request.session.get('recepient_form_data')
+                # TODO (V2 - 귀국배송)
+                # request.session['package_form_data'] = request.session.get('package_form_data')
+                request.session['item_form_data'] = item_form.cleaned_data
             return HttpResponseRedirect('/account/registerDelivery')
     else:
-        item_form = EnterItemInfoForm()
+        # item_form = EnterItemInfoForm()
+        item_formset = ItemInfoFormset()
         recepient_form_data = request.session.get('recepient_form_data')
         # TODO (V2 - 귀국배송)
         # package_form_data = request.session.get('package_form_data')
         # args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
-        args = {'item_form': item_form, 'recepient_form_data': recepient_form_data}
+        args = {'item_formset': item_formset, 'recepient_form_data': recepient_form_data}
         return render(request, 'account/reg_item_form.html', args)
 
 @login_required

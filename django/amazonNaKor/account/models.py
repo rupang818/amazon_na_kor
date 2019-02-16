@@ -91,6 +91,7 @@ class Item(models.Model):
     price = models.FloatField("단가 (USD)", default='0')
     qty = models.IntegerField("수량", default='1')
 
+
 class Delivery(models.Model):
     class Meta:
         verbose_name_plural = "deliveries"

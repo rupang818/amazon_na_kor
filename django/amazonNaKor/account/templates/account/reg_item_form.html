@@ -25,7 +25,10 @@
       <div class="card-body">
           <form method="post">
             {% csrf_token %}
+            {{ formset.management_form }}
+            {% for item_form in item_formset %}
             {{ item_form.as_p }}
+            {% endfor %}
             <button type="next">다음</button>
           </form>
       </div>

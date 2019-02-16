@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User, Recepient, Package, Item, Delivery
 
 from localflavor.us.forms import USStateSelect, USZipCodeField
-
+from django.forms.formsets import formset_factory
 
 class RegistrationForm(UserCreationForm):
     class Meta:
@@ -138,6 +138,7 @@ class EnterItemInfoForm(forms.ModelForm):
         if commit:
             item.save()
         return item
+ItemInfoFormset = formset_factory(EnterItemInfoForm, extra=1)
 
 class EnterDeliveryInfoForm(forms.ModelForm):
     class Meta:
