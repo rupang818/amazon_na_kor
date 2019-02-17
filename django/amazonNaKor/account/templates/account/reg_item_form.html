@@ -22,16 +22,19 @@
         </div>
     </div>
     <div class="card bg-light text-black">
-      <div class="card-body">
-          <form method="post">
+      <form method="post">
+        <div class="card-body">
+          <ol>
             {% csrf_token %}
             {{ formset.management_form }}
             {% for item_form in item_formset %}
+            <li></li>
             {{ item_form.as_p }}
             {% endfor %}
             <button type="next">다음</button>
-          </form>
-      </div>
+          </ol>
+        </div>
+      </form>
     </div>
   </div>
 </div>
