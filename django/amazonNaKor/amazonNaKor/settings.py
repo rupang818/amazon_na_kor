@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'localflavor',
     'import_export',
+    'djangoformsetjs',
+    'jquery',
 ]
 
 MIDDLEWARE = [

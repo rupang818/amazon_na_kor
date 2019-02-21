@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
+
+
 {% block body %}
+
+{{ item_formset.media }}
+
 <div class="container">
   <h1>아이템 정보</h1>
   <div class="card-deck">
@@ -25,14 +30,102 @@
       <form method="post">
         <div class="card-body">
           <ol>
-            {% csrf_token %}
-            {{ formset.management_form }}
-            {% for item_form in item_formset %}
-            <li></li>
-            {{ item_form.as_p }}
-            {% endfor %}
-            <button type="next">다음</button>
+              {% csrf_token %}
+              {% load formset_tags %}
+
+                <div id="item_formset" data-formset-prefix="{{ item_formset.prefix }}">
+                  {{ item_formset.management_form }}
+
+                  <div data-formset-body>
+                    {% for item_form in item_formset %}
+                      <div data-formset-form>
+                        <li>
+                          <button type="button" data-formset-delete-button>-</button>
+                          <br>
+                          {{ item_form.item_name.label }}
+                          {{ item_form.item_name }}
+                          {% if item_form.item_name.errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {{ item_form.item_name.errors | striptags }}
+                            </div>
+                          {% endif %}
+                          <br>
+                          {{ item_form.price.label }}
+                          {{ item_form.price }}
+                          {% if item_form.price.errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {{ item_form.price.errors | striptags }}
+                            </div>
+                          {% endif %}
+                          <br>
+                          {{ item_form.qty.label }}
+                          {{ item_form.qty }}
+                          {% if item_form.qty.errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {{ item_form.qty.errors | striptags }}
+                            </div>
+                          {% endif %}
+                          <div hidden>{{ item_form.DELETE }}</div>
+                          <br>
+                        </li>
+                        <br>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <script>jQuery(function($) {
+                      $("#item_formset").formset({
+                          animateForms: true
+                      });
+                  });</script>
+
+                  <!-- The empty form template. By wrapping this in a <script> tag, the
+                  __prefix__ placeholder can easily be replaced in both attributes and
+                  any scripts -->
+                  <script type="form-template" data-formset-empty-form>
+                      {% escapescript %}
+                          <div data-formset-form>
+                            <li>
+                              <button type="button" data-formset-delete-button>-</button>
+                              <br>
+                              {{ item_formset.empty_form.item_name.label }}
+                              {{ item_formset.empty_form.item_name }}
+                              {% if item_formset.empty_form.item_name.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                  {{ item_formset.empty_form.item_name.errors | striptags }}
+                                </div>
+                              {% endif %}
+                              <br>
+                              {{ item_formset.empty_form.price.label }}
+                              {{ item_formset.empty_form.price }}
+                              {% if item_formset.empty_form.price.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                  {{ item_form.price.errors | striptags }}
+                                </div>
+                              {% endif %}
+                              <br>
+                              {{ item_formset.empty_form.qty.label }}
+                              {{ item_formset.empty_form.qty }}
+                              {% if item_formset.empty_form.qty.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                  {{ item_formset.empty_form.qty.errors | striptags }}
+                                </div>
+                              {% endif %}
+                              <div hidden>{{ item_formset.empty_form.DELETE }}</div>
+                              <br>
+                            </li>
+                          <br>
+                        </div>
+                      {% endescapescript %}
+                  </script>
+                  <!-- This button will add a new form when clicked -->
+                 <input class="float-left" type="button" value="+ Add more" data-formset-add>
+
+                </div>
           </ol>
+
+          <button class="float-right" type="next" name="next" value="next">다음</button>
+          <br><br>
         </div>
       </form>
     </div>

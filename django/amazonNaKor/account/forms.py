@@ -4,6 +4,7 @@ from .models import User, Recepient, Package, Item, Delivery
 
 from localflavor.us.forms import USStateSelect, USZipCodeField
 from django.forms.formsets import formset_factory
+from djangoformsetjs.utils import formset_media_js
 
 class RegistrationForm(UserCreationForm):
     class Meta:
@@ -117,6 +118,13 @@ class EnterPackageInfoForm(forms.ModelForm):
         return package
 
 class EnterItemInfoForm(forms.ModelForm):
+
+    class Media(object):
+        # The form must have `formset_media_js` in its Media
+        js = formset_media_js + (
+            # Other form javascript...
+        )
+
     class Meta:
         model = Item
         fields = (
@@ -138,7 +146,7 @@ class EnterItemInfoForm(forms.ModelForm):
         if commit:
             item.save()
         return item
-ItemInfoFormset = formset_factory(EnterItemInfoForm, extra=1)
+ItemInfoFormset = formset_factory(EnterItemInfoForm, can_delete=True)
 
 class EnterDeliveryInfoForm(forms.ModelForm):
     class Meta:

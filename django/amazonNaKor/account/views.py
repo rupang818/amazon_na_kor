@@ -66,33 +66,37 @@ def registerPackage(request):
 
 @login_required
 def registerItem(request):
+    recepient_form_data = request.session.get('recepient_form_data')
     if request.method == 'POST':
-        # item_form = EnterItemInfoForm(request.POST)
         item_formset = ItemInfoFormset(request.POST)
 
-        # if item_form.is_valid():
-        if item_formset.is_valid():
-            for item_form in item_formset:
+        if item_formset.is_valid() and request.POST.get("next"):
+            item_index = 0
+            for item_form in item_formset.cleaned_data:
+                if item_form['DELETE']:
+                    continue
                 request.session['recepient_form_data'] = request.session.get('recepient_form_data')
                 # TODO (V2 - 귀국배송)
                 # request.session['package_form_data'] = request.session.get('package_form_data')
-                request.session['item_form_data'] = item_form.cleaned_data
+
+                item_enum_key = str('item_%d_data' %item_index)
+                request.session[item_enum_key] = item_form
+                item_index += 1
             return HttpResponseRedirect('/account/registerDelivery')
     else:
-        # item_form = EnterItemInfoForm()
         item_formset = ItemInfoFormset()
-        recepient_form_data = request.session.get('recepient_form_data')
-        # TODO (V2 - 귀국배송)
-        # package_form_data = request.session.get('package_form_data')
-        # args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
-        args = {'item_formset': item_formset, 'recepient_form_data': recepient_form_data}
-        return render(request, 'account/reg_item_form.html', args)
+    # TODO (V2 - 귀국배송)
+    # package_form_data = request.session.get('package_form_data')
+    # args = {'item_form': item_form, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+    args = {'item_formset': item_formset, 'recepient_form_data': recepient_form_data}
+    return render(request, 'account/reg_item_form.html', args)
 
 @login_required
 def registerDelivery(request):
     if request.method == 'POST':
         delivery_form = EnterDeliveryInfoForm(request.POST)
-        item_form = EnterItemInfoForm(request.session.get('item_form_data'))
+        # TODO: iterate through all items (0,1,2 ...)
+        # item_form = EnterItemInfoForm(request.session.get('item_form_data'))
         recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
         # TODO (V2 - 귀국배송)
         # package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
@@ -102,8 +106,9 @@ def registerDelivery(request):
 
             # V1 - save the default values for the pkg
             pkg_default_obj = Package.create(request.user, recepient_obj.id)
-            item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
-            delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, item=item_obj.id)
+            # TODO: iterate through all items (0,1,2 ...)
+            # item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
+            # delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, item=item_obj.id)
 
             msg = EmailMessage(
                        'Your order has been placed',
