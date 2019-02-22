@@ -72,6 +72,7 @@ def registerItem(request):
 
         if item_formset.is_valid() and request.POST.get("next"):
             item_index = 0
+            item_set_data = []
             for item_form in item_formset.cleaned_data:
                 if item_form['DELETE']:
                     continue
@@ -80,8 +81,12 @@ def registerItem(request):
                 # request.session['package_form_data'] = request.session.get('package_form_data')
 
                 item_enum_key = str('item_%d_data' %item_index)
-                request.session[item_enum_key] = item_form
                 item_index += 1
+                item_set_data.append(item_form)
+
+            request.session['total_items_count'] = item_index
+            request.session['item_set_data'] = item_set_data
+
             return HttpResponseRedirect('/account/registerDelivery')
     else:
         item_formset = ItemInfoFormset()
@@ -95,33 +100,33 @@ def registerItem(request):
 def registerDelivery(request):
     if request.method == 'POST':
         delivery_form = EnterDeliveryInfoForm(request.POST)
-        # TODO: iterate through all items (0,1,2 ...)
-        # item_form = EnterItemInfoForm(request.session.get('item_form_data'))
         recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
+
         # TODO (V2 - 귀국배송)
         # package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
 
         if delivery_form.is_valid():
             recepient_obj = recepient_form.save(request.user)
+            pkg_default_obj = Package.create(request.user, recepient_obj.id) # V1 - save the default values for the pkg (change for V2)
 
-            # V1 - save the default values for the pkg
-            pkg_default_obj = Package.create(request.user, recepient_obj.id)
-            # TODO: iterate through all items (0,1,2 ...)
-            # item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
-            # delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, item=item_obj.id)
+            for item_form_data in request.session.get('item_set_data'):
+                item_form = EnterItemInfoForm(item_form_data)
+                item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
+                delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, item=item_obj.id)
 
-            msg = EmailMessage(
-                       'Your order has been placed',
-                       '<strong>Order number:</strong> ' + str(delivery_obj.id) + \
-                       '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + \
-                       '<br><br>저희 서비스를 이용해주셔서 감사합니다. 배송을 원하시는 날자에 아래의 주소지로 물품을 가져와 주세요: <br><strong>1914 Junction ave. San Jose CA 95131</strong>' + \
-                       '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
-                       '<br><br>영업일은 국가 공휴일 제외 월-금 아침 9시부터 오후 5시까지 입니다 (점심시간: 12시-1시). 결제는 cash or check only 입니다.',
-                       'sf.rocket.master@gmail.com',
-                       [request.user.email],
-                  )
-            msg.content_subtype = "html"
-            msg.send()
+            # TODO: uncomment for email
+            # msg = EmailMessage(
+            #            'Your order has been placed',
+            #            '<strong>Order number:</strong> ' + str(delivery_obj.id) + \
+            #            '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + \
+            #            '<br><br>저희 서비스를 이용해주셔서 감사합니다. 배송을 원하시는 날자에 아래의 주소지로 물품을 가져와 주세요: <br><strong>1914 Junction ave. San Jose CA 95131</strong>' + \
+            #            '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
+            #            '<br><br>영업일은 국가 공휴일 제외 월-금 아침 9시부터 오후 5시까지 입니다 (점심시간: 12시-1시). 결제는 cash or check only 입니다.',
+            #            'sf.rocket.master@gmail.com',
+            #            [request.user.email],
+            #       )
+            # msg.content_subtype = "html"
+            # msg.send()
 
             return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj})
         else:
@@ -137,15 +142,19 @@ def registerDelivery(request):
             return render(request, 'account/reg_delivery_form.html', args)
             
     else:
+        total_items_count = request.session.get('total_items_count')
         delivery_form = EnterDeliveryInfoForm()
         recepient_form_data = request.session.get('recepient_form_data')
         # TODO (V2 - 귀국배송)
         # package_form_data = request.session.get('package_form_data')
-        item_form_data = request.session.get('item_form_data')
+        item_set_data = request.session.get('item_set_data')
+
+
+        print("item_set_data %s" %item_set_data)
 
         # TODO (V2 - 귀국배송)
         # args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
-        args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'recepient_form_data': recepient_form_data}
+        args = {'delivery_form': delivery_form, 'item_set_data': item_set_data, 'recepient_form_data': recepient_form_data, 'total_items_count': total_items_count}
         return render(request, 'account/reg_delivery_form.html', args)
 
 @login_required
