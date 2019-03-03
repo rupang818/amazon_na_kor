@@ -88,7 +88,7 @@ class Item(models.Model):
     recepient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
     item_name = models.CharField("상품명", max_length=1024, default='')
-    price = models.FloatField("단가 (USD)", default='0')
+    price = models.FloatField("단가 (USD)", default='0.0')
     qty = models.IntegerField("수량", default='1')
 
 

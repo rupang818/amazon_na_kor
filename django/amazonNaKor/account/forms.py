@@ -6,6 +6,16 @@ from localflavor.us.forms import USStateSelect, USZipCodeField
 from django.forms.formsets import formset_factory
 from djangoformsetjs.utils import formset_media_js
 
+def isEnglishOrKorean(input_s):
+    k_count = 0
+    e_count = 0
+    for c in input_s:
+        if ord('가') <= ord(c) <= ord('힣'):
+            k_count+=1
+        elif ord('a') <= ord(c.lower()) <= ord('z'):
+            e_count+=1
+    return "k" if k_count>1 else "e"
+
 class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
@@ -71,6 +81,12 @@ class EnterRecepientInfoForm(forms.ModelForm):
         )
         unique_together = (("sender_email", "name"),)
 
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if isEnglishOrKorean(name) is "e":
+            raise forms.ValidationError("받는사람 이름은 한글로만 작성 해주세요")
+        return name
+
     def save(self, user = None, commit=True):
         recepient = super(EnterRecepientInfoForm, self).save(commit=False)
         recepient.sender_email = user   #PK1
@@ -133,6 +149,19 @@ class EnterItemInfoForm(forms.ModelForm):
             'qty',
         )
         unique_together = (("sender_email", "recepient_id", "package_id"),)
+
+    def clean_price(self):
+        price = self.cleaned_data['price']
+        if price <= 0:
+            raise forms.ValidationError("단가는 0 이상으로 책정해주세요")
+        return price
+
+    def clean_item_name(self):
+        item_name = self.cleaned_data['item_name']
+        if isEnglishOrKorean(item_name) is "k":
+            raise forms.ValidationError("상품명은 영문으로만 작성 해주세요")
+        return item_name
+
 
     def save(self, user = None, recepient = None, package = None, commit=True):
         item = super(EnterItemInfoForm, self).save(commit=False)

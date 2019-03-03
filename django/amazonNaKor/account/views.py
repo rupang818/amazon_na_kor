@@ -43,8 +43,8 @@ def registerRecepient(request):
             return HttpResponseRedirect('/account/registerItem')
     else:
         recepient_form = EnterRecepientInfoForm()
-        args = {'recepient_form': recepient_form}
-        return render(request, 'account/reg_recepient_form.html', args)
+    args = {'recepient_form': recepient_form}
+    return render(request, 'account/reg_recepient_form.html', args)
 
 
 @login_required

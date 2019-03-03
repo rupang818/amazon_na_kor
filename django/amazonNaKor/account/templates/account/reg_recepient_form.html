@@ -13,7 +13,51 @@
       <div class="card-body">
           <form method="post">
             {% csrf_token %}
-            {{ recepient_form.as_p }}
+            {{ recepient_form.name.label }}
+            {{ recepient_form.name }}
+            {% if recepient_form.name.errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ recepient_form.name.errors | striptags }}
+              </div>
+            {% endif %}
+            <br><br>
+
+            {{ recepient_form.phone.label }}
+            {{ recepient_form.phone }}
+            {% if recepient_form.phone.errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ recepient_form.phone.errors | striptags }}
+              </div>
+            {% endif %}
+            <br><br>
+
+            {{ recepient_form.postal_code.label }}
+            {{ recepient_form.postal_code }}
+            {% if recepient_form.postal_code.errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ recepient_form.postal_code.errors | striptags }}
+              </div>
+            {% endif %}
+            <br><br>
+
+            {{ recepient_form.address.label }}
+            {{ recepient_form.address }}
+            {% if recepient_form.address.errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ recepient_form.address.errors | striptags }}
+              </div>
+            {% endif %}
+            <br><br>
+
+            {{ recepient_form.customs_id.label }}
+            {{ recepient_form.customs_id }}
+            {% if recepient_form.customs_id.errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ recepient_form.customs_id.errors | striptags }}
+              </div>
+            {% endif %}
+            <br><br>
+            
             <button type="next">다음</button>
           </form>
       </div>
