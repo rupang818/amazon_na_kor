@@ -163,8 +163,9 @@ class EnterItemInfoForm(forms.ModelForm):
         return item_name
 
 
-    def save(self, user = None, recepient = None, package = None, commit=True):
+    def save(self, user = None, recepient = None, package = None, delivery= None, commit = True):
         item = super(EnterItemInfoForm, self).save(commit=False)
+        item.delivery = delivery
         item.sender_email = user   #PK1 (PK2 is 'id')
         item.recepient_id = recepient #PK3
         item.package_id = package #PK3
@@ -191,28 +192,29 @@ class EnterDeliveryInfoForm(forms.ModelForm):
             raise forms.ValidationError("\"위 사항에 동의합니다\"를 클릭해주세요 (Agreement must be acknowledged)", code='invalid')
         return agreement_signed
 
+    def calculate_estimate(self, weight, customs_fee_payee, method):
+        estimate = 8.5 + weight * 1.5 
+        if customs_fee_payee == 'RECEPIENT':
+            estimate += 5.0
+        if method == 'UPS':
+            estimate += 10.0
+        return estimate
 
-    def save(self, user = None, recepient = None, package = None, item = None, commit=True):
+    def save(self, user = None, recepient = None, package = None, commit=True):
         delivery = super(EnterDeliveryInfoForm, self).save(commit=False)
         delivery.sender_email = user
         delivery.recepient_id = recepient
         delivery.package_id = package
-        delivery.item_id = item
         delivery.customs_fee_payee = self.cleaned_data['customs_fee_payee']
         delivery.method = self.cleaned_data['method']
         delivery.agreement_signed = self.cleaned_data['agreement_signed']
         delivery.dropped_off = False
         delivery.sent = False
 
-
         # Calculate the estimated cost
         _pkg_obj_list=Package.objects.filter(id=package)
         _weight=_pkg_obj_list[0].weight
-        delivery.estimate = 8.5 + _weight * 1.5 
-        if delivery.customs_fee_payee == 'RECEPIENT':
-            delivery.estimate += 5.0
-        if delivery.method == 'UPS':
-            delivery.estimate += 10.0
+        delivery.estimate = self.calculate_estimate(_weight, delivery.customs_fee_payee, delivery.method)
 
         if commit:
             delivery.save()

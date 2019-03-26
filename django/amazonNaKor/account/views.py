@@ -109,10 +109,10 @@ def registerDelivery(request):
             recepient_obj = recepient_form.save(request.user)
             pkg_default_obj = Package.create(request.user, recepient_obj.id) # V1 - save the default values for the pkg (change for V2)
 
+            delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
             for item_form_data in request.session.get('item_set_data'):
                 item_form = EnterItemInfoForm(item_form_data)
-                item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
-                delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, item=item_obj.id)
+                item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, delivery=delivery_obj)
 
             # TODO: uncomment for email
             # msg = EmailMessage(
@@ -253,7 +253,7 @@ def download_csv(request):
             for package in packages_list:
                 items_list = Item.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id)
                 for item in items_list:
-                    deliveries_list = Delivery.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id, item_id=item.id)
+                    deliveries_list = Delivery.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id, item=item)
                     for delivery in deliveries_list:
                         writer.writerow([delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
                                         recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',

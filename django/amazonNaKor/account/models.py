@@ -83,15 +83,6 @@ class Package(models.Model):
         pkg.save()
         return pkg
 
-class Item(models.Model):
-    sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
-    recepient_id = models.IntegerField("받는사람 id")
-    package_id = models.IntegerField("패키지 id")
-    item_name = models.CharField("상품명", max_length=1024, default='')
-    price = models.FloatField("단가 (USD)", default='0.0')
-    qty = models.IntegerField("수량", default='1')
-
-
 class Delivery(models.Model):
     class Meta:
         verbose_name_plural = "deliveries"
@@ -102,15 +93,25 @@ class Delivery(models.Model):
     )
     method = (
         ('DIRECT', '직접방문'),
-        ('UPS', 'UPS 배송 (+ $10.00)'),
+        # ('UPS', 'UPS 배송 (+ $10.00)'), # Uncomment for V2 - UPS
     )
+
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     recepient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
-    item_id = models.IntegerField("아이템 id")
     customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='SENDER')
     method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
     agreement_signed = models.BooleanField("위 사항에 동의합니다")
     estimate = models.FloatField("Estimated Price")
     dropped_off = models.BooleanField(blank=True)
     sent = models.BooleanField(blank=True)
+
+class Item(models.Model):
+    sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
+    recepient_id = models.IntegerField("받는사람 id")
+    package_id = models.IntegerField("패키지 id")
+    item_name = models.CharField("상품명", max_length=1024, default='')
+    price = models.FloatField("단가 (USD)", default='0.0')
+    qty = models.IntegerField("수량", default='1')
+    delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)    # One (item) to Many (Delivery) relationship
+
