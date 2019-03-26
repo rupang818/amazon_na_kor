@@ -149,9 +149,6 @@ def registerDelivery(request):
         # package_form_data = request.session.get('package_form_data')
         item_set_data = request.session.get('item_set_data')
 
-
-        print("item_set_data %s" %item_set_data)
-
         # TODO (V2 - 귀국배송)
         # args = {'delivery_form': delivery_form, 'item_form_data': item_form_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
         args = {'delivery_form': delivery_form, 'item_set_data': item_set_data, 'recepient_form_data': recepient_form_data, 'total_items_count': total_items_count}

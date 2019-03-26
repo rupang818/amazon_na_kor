@@ -87,6 +87,12 @@ class EnterRecepientInfoForm(forms.ModelForm):
             raise forms.ValidationError("받는사람 이름은 한글로만 작성 해주세요")
         return name
 
+    def clean_address(self):
+        address = self.cleaned_data['address']
+        if isEnglishOrKorean(address) is "e":
+            raise forms.ValidationError("받는사람 주소는 한글로만 작성 해주세요")
+        return address
+
     def save(self, user = None, commit=True):
         recepient = super(EnterRecepientInfoForm, self).save(commit=False)
         recepient.sender_email = user   #PK1
