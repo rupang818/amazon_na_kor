@@ -6,11 +6,21 @@
 
 {% block body %}
 <div class="container">
-    <p>
-        <h3>일반/귀국 택배 요율표</h3>
-        {% load static %}
-        <img src="{% static "account/price_chart.png" %}" alt="Price Chart">
-        <!-- TODO: provide TV요율표 -->
-    </p>
+	<div class="card-deck">
+    <div class="card bg-light text-black">
+      	<div class="card-header text-center">
+	        <h3>일반/귀국 택배 요율표</h3>
+	    </div>
+		<div class="card-body">
+			{% load static %}
+        	<img src="{% static "account/price_chart.png" %}" alt="Price Chart">
+        	<!-- TODO: provide TV요율표 -->
+        </div>
+   	</div>
+    <div class="card bg-light text-black">
+		<div class="card-body">
+			<a href="/account/registerRecepient" class="button">택배 보내기</a>
+		</div>
+    </div>
 </div>
 {% endblock %}

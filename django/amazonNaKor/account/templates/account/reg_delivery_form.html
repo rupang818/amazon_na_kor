@@ -23,10 +23,9 @@
 
     <div class="card bg-light text-dark">
       <div class="card-body">
-
             {% csrf_token %}
-            <p>{{ delivery_form.customs_fee_payee }}</p>
-            <p>{{ delivery_form.method }}</p>
+            <p>{{ delivery_form.customs_fee_payee.label }}: {{ delivery_form.customs_fee_payee }}</p>
+            <p>{{ delivery_form.method.label }}: {{ delivery_form.method }}</p>
             <button type="next">Submit</button>
           </form>
       </div>
