@@ -107,6 +107,19 @@ class Delivery(models.Model):
     sent = models.BooleanField(blank=True)
 
 class Item(models.Model):
+
+    # (HS코드, 상품코드)
+    ITEM_CODES =(
+        ('96', '선택'),
+        ('30', '식품'),
+        ('33', '화장품'),
+        ('62', '의류'),
+        ('85', '전자기기'),
+        ('92', '악기'),
+        ('94', '가구/조명'),
+        ('96', '잡품'),
+    )
+
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     recepient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
@@ -114,6 +127,5 @@ class Item(models.Model):
     price = models.FloatField("단가 (USD)", default='0.0')
     qty = models.IntegerField("수량", default='1')
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)    # One (item) to Many (Delivery) relationship
-    # TODO: 
-    # 상품코드
-    # HS코드
+    item_code = models.CharField(max_length=1024, default='선택')
+    hs_code = models.CharField("상품코드", choices=ITEM_CODES, max_length=1024, default='96')

@@ -65,6 +65,14 @@
                               {{ item_form.qty.errors | striptags }}
                             </div>
                           {% endif %}
+                          <br>
+                          {{ item_form.hs_code.label }}
+                          {{ item_form.hs_code }}
+                          {% if item_form.hs_code.errors %}
+                            <div class="alert alert-danger" role="alert">
+                              {{ item_form.hs_code.errors | striptags }}
+                            </div>
+                          {% endif %}
                           <div hidden>{{ item_form.DELETE }}</div>
                           <br>
                         </li>
@@ -109,6 +117,14 @@
                               {% if item_formset.empty_form.qty.errors %}
                                 <div class="alert alert-danger" role="alert">
                                   {{ item_formset.empty_form.qty.errors | striptags }}
+                                </div>
+                              {% endif %}
+                              <br>
+                              {{ item_formset.empty_form.item_code.label }}
+                              {{ item_formset.empty_form.item_code }}
+                              {% if item_formset.empty_form.item_code.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                  {{ item_formset.empty_form.item_code.errors | striptags }}
                                 </div>
                               {% endif %}
                               <div hidden>{{ item_formset.empty_form.DELETE }}</div>

@@ -153,6 +153,7 @@ class EnterItemInfoForm(forms.ModelForm):
             'item_name',
             'price',
             'qty',
+            'hs_code',
         )
         unique_together = (("sender_email", "recepient_id", "package_id"),)
 
@@ -168,7 +169,6 @@ class EnterItemInfoForm(forms.ModelForm):
             raise forms.ValidationError("상품명은 영문으로만 작성 해주세요")
         return item_name
 
-
     def save(self, user = None, recepient = None, package = None, delivery= None, commit = True):
         item = super(EnterItemInfoForm, self).save(commit=False)
         item.delivery = delivery
@@ -176,6 +176,8 @@ class EnterItemInfoForm(forms.ModelForm):
         item.recepient_id = recepient #PK3
         item.package_id = package #PK3
         item.item_name = self.cleaned_data['item_name']
+        item.hs_code = self.cleaned_data['hs_code']
+        item.item_code = dict(item.ITEM_CODES).get(item.hs_code)
         item.price = self.cleaned_data['price']
         item.qty = self.cleaned_data['qty']
 

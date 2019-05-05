@@ -255,7 +255,7 @@ def download_csv(request):
                         writer.writerow([delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
                                         recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',
                                         package.pkg_type, '', package.width, package.length, package.height, package.weight, package.metric, package.box_count, package.standard_order, '', '',
-                                        item.item_name, '', item.price, item.qty, '', '',
+                                        item.item_name, '', item.price, item.qty, item.item_code, item.hs_code,
                                         user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', '', delivery.dropped_off, delivery.sent])
 
     return response
