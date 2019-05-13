@@ -1,4 +1,0 @@
-# Install all modules using pip
-pip3 install django-localflavor
-pip3 install django-import-export
-pip3 install django-formset-js 

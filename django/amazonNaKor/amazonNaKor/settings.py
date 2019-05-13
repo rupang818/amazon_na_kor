@@ -26,11 +26,10 @@ SECRET_KEY = '%*vcckkze2jqe#@x56)1h3ej@h3*m24wdq4_y!t#llb(o9hmmw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'beta-env.d2br3vq4ma.us-west-2.elasticbeanstalk.com', 'dev-env.veapytcpvv.us-west-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'beta-env.d2br3vq4ma.us-west-2.elasticbeanstalk.com', 'test-env.veapytcpvv.us-west-1.elasticbeanstalk.com']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'django.contrib.admin',
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
     'import_export',
     'djangoformsetjs',
     'jquery',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'amazonNaKor.wsgi.application'
 if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': os.environ['RDS_DB_NAME'],
             'USER': os.environ['RDS_USERNAME'],
             'PASSWORD': os.environ['RDS_PASSWORD'],
@@ -93,9 +93,17 @@ if 'RDS_HOSTNAME' in os.environ:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'sfrocket_beta',
+            'USER': 'master',
+            'PASSWORD': 'mypassword',
+            'HOST': 'localhost',
+            'PORT': '5432',
         },
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # },
     }
 
 # Password validation
@@ -119,8 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'US/Pacific'
 
@@ -146,3 +153,5 @@ EMAIL_HOST_USER = 'sf.rocket.master@gmail.com'
 EMAIL_HOST_PASSWORD = 'sfrocket123'
 
 AUTH_USER_MODEL = 'account.User'
+
+PHONENUMBER_DEFAULT_REGION = 'US'
