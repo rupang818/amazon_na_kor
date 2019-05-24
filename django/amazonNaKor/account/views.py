@@ -232,11 +232,13 @@ def download_csv(request):
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
 
     writer = csv.writer(response, delimiter=',')
-    writer.writerow(['번호', '보내는 사람 이름', '보내는 사람 전화', '보내는 사람 주소', '관리번호',
-                     '받는사람 이름', '받는사람 전화', '받는사람 휴대폰', '받는사람 우편번호', '받는사람 주소', '받는사람 상세주소', '통관고유번호', '배송메모', '구분',
-                     '수업유형', '판매 site URL', '가로(Cm)', '세로(Cm)', '높이(Cm)', '중량', '중량단위(1:Kg, 2:Lbs)', 'Box수량', '일반신청', '통관지정번호', '체결번호',
-                     '상품명', '브랜드', '단가(USD)', '수량', '상품코드', 'HS코드',
-                     'Email', 'Payable($)', 'Custom', 'Type', 'Receive', 'Remark', 'PMT STTS', 'Dropped Off?', 'Fulfilled?'])
+    raw_arr = ['번호', '보내는 사람 이름', '보내는 사람 전화', '보내는 사람 주소', '관리번호',
+                 '받는사람 이름', '받는사람 전화', '받는사람 휴대폰', '받는사람 우편번호', '받는사람 주소', '받는사람 상세주소', '통관고유번호', '배송메모', '구분',
+                 '수업유형', '판매 site URL', '가로(Cm)', '세로(Cm)', '높이(Cm)', '중량', '중량단위(1:Kg, 2:Lbs)', 'Box수량', '일반신청', '통관지정번호', '체결번호',
+                 '상품명', '브랜드', '단가(USD)', '수량', '상품코드', 'HS코드',
+                 'Email', 'Payable($)', 'Custom', 'Type', 'Receive', 'Remark', 'PMT STTS', 'Dropped Off?', 'Fulfilled?']
+    writer.writerow([x.encode('euc-kr').decode('euc-kr') for x in raw_arr])
+
 
     for user in users:
         # User information
@@ -251,12 +253,14 @@ def download_csv(request):
                 items_list = Item.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id)
                 for item in items_list:
                     deliveries_list = Delivery.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id, item=item)
+                    response_arr = []
                     for delivery in deliveries_list:
-                        writer.writerow([delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
+                        response_arr = [delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
                                         recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',
                                         package.pkg_type, '', package.width, package.length, package.height, package.weight, package.metric, package.box_count, package.standard_order, '', '',
                                         item.item_name, '', item.price, item.qty, item.item_code, item.hs_code,
-                                        user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', '', delivery.dropped_off, delivery.sent])
+                                        user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', '', delivery.dropped_off, delivery.sent]
+                        writer.writerow([str(x).encode('euc-kr').decode('euc-kr') for x in response_arr])
 
     return response
 

@@ -4,7 +4,6 @@ from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from phonenumber_field.modelfields import PhoneNumberField
 from localflavor.us.models import USStateField, USZipCodeField
 
 class UserManager(BaseUserManager):
@@ -43,7 +42,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None # Don't use the username - instead, authenticate using email
     email = models.EmailField(_('email address'), unique=True)
-    phone = PhoneNumberField("Phone")
+    phone = models.IntegerField("Phone", default='')
     address1 = models.CharField("Address 1", max_length=1024, default='')
     address2 = models.CharField("Address 2", max_length=1024, default='', blank=True)
     city = models.CharField("City", max_length=1024, default='')
@@ -60,7 +59,7 @@ class User(AbstractUser):
 class Recepient(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     name = models.CharField("이름", max_length=1024, default='')
-    phone = PhoneNumberField("전화번호", default='')
+    phone = models.IntegerField("전화번호(한국)", default='')
     postal_code = models.IntegerField("우편번호", default='')
     address = models.CharField("주소", max_length=1024, default='')
     customs_id = models.CharField("통관고유부호", max_length=1024, default='')

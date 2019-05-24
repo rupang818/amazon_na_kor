@@ -120,11 +120,11 @@
                                 </div>
                               {% endif %}
                               <br>
-                              {{ item_formset.empty_form.item_code.label }}
-                              {{ item_formset.empty_form.item_code }}
-                              {% if item_formset.empty_form.item_code.errors %}
+                              {{ item_formset.empty_form.hs_code.label }}
+                              {{ item_formset.empty_form.hs_code }}
+                              {% if item_formset.empty_form.hs_code.errors %}
                                 <div class="alert alert-danger" role="alert">
-                                  {{ item_formset.empty_form.item_code.errors | striptags }}
+                                  {{ item_formset.empty_form.hs_code.errors | striptags }}
                                 </div>
                               {% endif %}
                               <div hidden>{{ item_formset.empty_form.DELETE }}</div>
