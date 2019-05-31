@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'import_export',
     'djangoformsetjs',
     'jquery',
-    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
