@@ -114,7 +114,6 @@ def registerDelivery(request):
                 item_form = EnterItemInfoForm(item_form_data)
                 item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, delivery=delivery_obj)
 
-            # TODO: uncomment for email
             # msg = EmailMessage(
             #            'Your order has been placed',
             #            '<strong>Order number:</strong> ' + str(delivery_obj.id) + \
@@ -128,7 +127,7 @@ def registerDelivery(request):
             # msg.content_subtype = "html"
             # msg.send()
 
-            return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj})
+            return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj, 'pkg_default_obj': pkg_default_obj})
         else:
             recepient_form_data = request.session.get('recepient_form_data')
             # TODO (V2 - 귀국배송)

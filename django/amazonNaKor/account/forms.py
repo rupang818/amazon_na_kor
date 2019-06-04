@@ -58,7 +58,6 @@ class EditProfileForm(UserChangeForm):
             'email',
             'first_name',
             'last_name',
-            'password',
             'phone',
             'address1',
             'address2',
@@ -69,7 +68,6 @@ class EditProfileForm(UserChangeForm):
 
 
 class EnterRecepientInfoForm(forms.ModelForm):
-
     class Meta:
         model = Recepient
         fields = (
@@ -80,6 +78,9 @@ class EnterRecepientInfoForm(forms.ModelForm):
             'customs_id',
         )
         unique_together = (("sender_email", "name"),)
+        widgets={
+            'address': forms.TextInput(attrs={'size': 32})
+        }
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -211,7 +212,7 @@ class EnterDeliveryInfoForm(forms.ModelForm):
 
     def calculate_estimate(self, weight, customs_fee_payee, method):
         estimate = 8.5 + weight * 1.5 
-        if customs_fee_payee == 'RECEPIENT':
+        if customs_fee_payee == 'SENDER':
             estimate += 5.0
         if method == 'UPS':
             estimate += 10.0

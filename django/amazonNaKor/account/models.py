@@ -58,11 +58,11 @@ class User(AbstractUser):
 
 class Recepient(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
-    name = models.CharField("이름", max_length=1024, default='')
-    phone = models.BigIntegerField("전화번호(한국)")
+    name = models.CharField("받는 사람 이름", max_length=1024, default='')
+    phone = models.BigIntegerField("휴대전화 번호(한국)")
     postal_code = models.IntegerField("우편번호")
     address = models.CharField("주소", max_length=1024, default='')
-    customs_id = models.CharField("통관고유부호", max_length=1024, default='')
+    customs_id = models.CharField("통관고유부호/주민번호", max_length=1024, default='')
 
 class Package(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
@@ -88,8 +88,8 @@ class Delivery(models.Model):
         verbose_name_plural = "deliveries"
 
     payee = (
-        ('SENDER', '송하인(sender) 납부'),
-        ('RECEPIENT', '수취인 납부 (+ $5.00)'),
+        ('SENDER', '송하인(sender) 납부 (+ $5.00)'),
+        ('RECEPIENT', '수취인(receiver) 납부 (수령시 5,500원'),
     )
     method = (
         ('DIRECT', '직접방문'),

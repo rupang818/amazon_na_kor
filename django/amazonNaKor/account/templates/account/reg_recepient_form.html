@@ -6,11 +6,18 @@
   <div class="card-deck">
     <div class="card bg-dark text-white">
       <div class="card-header text-center"><h4>주의사항</h4></div>
-      <div class="card-body"><u>통관고유부호, 혹은 주민번호는 필수사항입니다.</u> 통관 고유부호가 입력되지 않을경우, 통관에 지연이 발생할 수 있습니다</div>
+      <div class="card-body">받는 사람 이름은 실명으로 적어주시고, 전화번호는 휴대전화 번호로 기입해주세요. 문자메시지로 배송안내가 갈 수 있습니다<br><br>
+      우편번호 및 주소는 신(5자리) 우편번호 자리와, 신 주소(길이름) 로 기입하셔야 더 빠르고 정확한 배송이 가능합니다<br><br>
+      통관고유부호 혹은 주민번호는 필수 입력 사항입니다. <u>해당 정보가 잘못기입되거나 입력되지 않을 경우, 배송이 지연될 수 있습니다</u><br><br>
+    </div>
     </div>
 
     <div class="card bg-light text-dark">
+        <div class="card-header text-center">
+          <h5>정보는 모두 한글로 기입해주세요</h5>
+        </div>
       <div class="card-body">
+          
           <form method="post">
             {% csrf_token %}
             {{ recepient_form.name.label }}
