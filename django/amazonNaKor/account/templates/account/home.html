@@ -12,8 +12,6 @@
 	        <h3>일반/귀국 택배 요율표</h3>
 	    </div>
 		<div class="card-body">
-			{% load static %}
-        	<!-- <img src="{% static "account/price_chart.png" %}" alt="Price Chart"> -->
             <table>
                 <tr>
                   <th> 무게 </th>
@@ -179,6 +177,7 @@
         	<!-- TODO: provide TV요율표 -->
             <br><br>월 ~ 금 (9:00am – 05:00pm)<br>
             <br><font color="red">점심시간: 11:30am – 01:00pm</font><br><br>
+            {% load static %}
             <img src="{% static "account/info.png" %}" alt="Price Chart">
         </div>
    	</div>
