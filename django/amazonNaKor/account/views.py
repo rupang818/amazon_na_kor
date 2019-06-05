@@ -129,7 +129,6 @@ def registerDelivery(request):
             #       )
             # msg.content_subtype = "html"
             # msg.send()
-            print(item_objs)
             return render(request,"account/order_summary.html",{'item_objs': item_objs, 'recepient_obj': recepient_obj, 'delivery_obj':delivery_obj, 'pkg_default_obj': pkg_default_obj})
         else:
             recepient_form_data = request.session.get('recepient_form_data')
