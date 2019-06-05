@@ -88,8 +88,9 @@ class Delivery(models.Model):
         verbose_name_plural = "deliveries"
 
     payee = (
-        ('SENDER', '송하인(sender) 납부 (+ $5.00)'),
-        ('RECEPIENT', '수취인(receiver) 납부 (수령시 5,500원'),
+        ('NONE', '해당 사항 없음'),
+        ('SENDER', '선불(보내는이 납부 : $5.00)'),
+        ('RECEPIENT', '후불(받는이 납부 : 5,500원)'),
     )
     method = (
         ('DIRECT', '직접방문'),
@@ -99,7 +100,7 @@ class Delivery(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     recepient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
-    customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='SENDER')
+    customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='NONE')
     method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
     agreement_signed = models.BooleanField("위 사항에 동의합니다")
     estimate = models.FloatField("Estimated Price")
@@ -111,21 +112,21 @@ class Item(models.Model):
     # (HS코드, 상품코드)
     ITEM_CODES =(
         ('96', '선택'),
-        ('30', '식품'),
+        ('30', '식품/건강식품'),
         ('33', '화장품'),
         ('62', '의류'),
         ('85', '전자기기'),
         ('92', '악기'),
         ('94', '가구/조명'),
-        ('96', '잡품'),
+        ('96', '기타(잡품)'),
     )
 
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     recepient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
     item_name = models.CharField("상품명", max_length=1024, default='')
-    price = models.FloatField("단가 (USD)", default='0.0')
+    price = models.FloatField("한개당 가격 (USD)", default='0.0')
     qty = models.IntegerField("수량", default='1')
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)    # One (item) to Many (Delivery) relationship
     item_code = models.CharField(max_length=1024, default='선택')
-    hs_code = models.CharField("상품코드", choices=ITEM_CODES, max_length=1024, default='96')
+    hs_code = models.CharField("상품종류", choices=ITEM_CODES, max_length=1024, default='96')

@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="container">
-  <h1>Order Submitted!</h1>
+  <h1>주문 완료!</h1>
   <div class="card-deck">
     <div class="card bg-dark text-white">
       <div class="card-header text-center"><h4>배송관련 안내문</h4></div>
@@ -18,10 +18,51 @@
       <div class="card-body">
           <form method="post">
             {% csrf_token %}
-            <p><b>오더번호</b>: {{ delivery_obj.id }}</p>
+            <div class="card-header">
+              <h4>주문 정보</h4>
+            </div>
+            <p><b>주문번호</b>: {{ delivery_obj.id }}</p>
             <p><b>중량</b>: {{ pkg_default_obj.weight }} lb</p>
             <p><b>Estimate</b>: ${{ delivery_obj.estimate }}</p>
+            <br>
+
+            <div class="card-header">
+              <h4>받는사람 정보</h4>
+            </div>
+            <p><b>이름:</b> {{ recepient_obj.name }}</p>
+            <p><b>전화번호:</b> {{ recepient_obj.phone }}</p>
+            <p><b>우편번호:</b> {{ recepient_obj.postal_code }}</p>
+            <p><b>주소:</b> {{ recepient_obj.address }}</p>
+            <p><b>통관고유부호:</b> {{ recepient_obj.customs_id }}</p>
+            <br>
+
+            <div class="card-header">
+              <h4>아이템 정보</h4>
+            </div>
+            <table>
+              {% if item_objs %}
+                <tr>
+                  <th> 상품명 </th>
+                  <th> 한개당 가격 (USD) </th>
+                  <th> 수량 </th>
+                  <th> 상품종류 </th>
+                </tr>
+                {% for item in item_objs %}
+                  <tr>
+                    <td> {{ item.item_name }} </td>
+                    <td> {{ item.price }} </td>
+                    <td> {{ item.qty }} </td>
+                    <td> {{ item.hs_code }} </td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                There are no items
+              {% endif %}
+            </table>
           </form>
+          <br>
+          <br> *해당 금액은 예상 금액으로, 실제 발생하는 요금과 차이가 있을 수 있습니다<br>
+          <br> **3시 이전 패키지를 드랍하셔야 당일 출고가 가능하며, 당사 물류 상황에 따라 다음날 출고 될 수 있습니다<br><br>
           <a href="/account/" class="button">홈으로 돌아가기 (Click Here to go back to Home)</a>
       </div>
     </div>

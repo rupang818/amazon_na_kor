@@ -110,25 +110,27 @@ def registerDelivery(request):
             pkg_default_obj = Package.create(request.user, recepient_obj.id) # V1 - save the default values for the pkg (change for V2)
 
             delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id)
+            item_objs = []
             for item_form_data in request.session.get('item_set_data'):
                 item_form = EnterItemInfoForm(item_form_data)
                 item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_default_obj.id, delivery=delivery_obj)
+                item_objs.append(item_obj)
 
-            msg = EmailMessage(
-                       'Your order has been placed',
-                       '<strong>Order number:</strong> ' + str(delivery_obj.id) + \
-                       '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + \
-                       '<br><br>저희 서비스를 이용해주셔서 감사합니다. 배송을 원하시는 날자에 아래의 주소지로 물품을 가져와 주세요: <br><strong>1914 Junction ave. San Jose CA 95131</strong>' + \
-                       '<br><br>Click <a href="https://www.google.com/maps/place/Hangil+Trade+Inc/@37.3819114,-121.9119374,17z/data=!4m13!1m7!3m6!1s0x808fcbfa7ed17c2d:0x7efbb18e5b000330!2s1914+Junction+Ave,+San+Jose,+CA+95131!3b1!8m2!3d37.3819114!4d-121.9097487!3m4!1s0x808fc99055555555:0xbef41751b43676fd!8m2!3d37.3819114!4d-121.9097487">here</a> to open Google Maps' + \
-                       '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
-                       '<br><br>영업일은 국가 공휴일 제외 월-금 아침 9시부터 오후 5시까지 입니다 (점심시간: 12시-1시). 결제는 cash or check only 입니다.',
-                       'sf.rocket.master@gmail.com',
-                       [request.user.email],
-                  )
-            msg.content_subtype = "html"
-            msg.send()
-
-            return render(request,"account/order_summary.html",{'delivery_obj':delivery_obj, 'pkg_default_obj': pkg_default_obj})
+            # msg = EmailMessage(
+            #            'Your order has been placed',
+            #            '<strong>Order number:</strong> ' + str(delivery_obj.id) + \
+            #            '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + \
+            #            '<br><br>저희 서비스를 이용해주셔서 감사합니다. 배송을 원하시는 날자에 아래의 주소지로 물품을 가져와 주세요: <br><strong>1914 Junction ave. San Jose CA 95131</strong>' + \
+            #            '<br><br>Click <a href="https://www.google.com/maps/place/Hangil+Trade+Inc/@37.3819114,-121.9119374,17z/data=!4m13!1m7!3m6!1s0x808fcbfa7ed17c2d:0x7efbb18e5b000330!2s1914+Junction+Ave,+San+Jose,+CA+95131!3b1!8m2!3d37.3819114!4d-121.9097487!3m4!1s0x808fc99055555555:0xbef41751b43676fd!8m2!3d37.3819114!4d-121.9097487">here</a> to open Google Maps' + \
+            #            '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
+            #            '<br><br>영업일은 국가 공휴일 제외 월-금 아침 9시부터 오후 5시까지 입니다 (점심시간: 12시-1시). 결제는 cash or check only 입니다.',
+            #            'sf.rocket.master@gmail.com',
+            #            [request.user.email],
+            #       )
+            # msg.content_subtype = "html"
+            # msg.send()
+            print(item_objs)
+            return render(request,"account/order_summary.html",{'item_objs': item_objs, 'recepient_obj': recepient_obj, 'delivery_obj':delivery_obj, 'pkg_default_obj': pkg_default_obj})
         else:
             recepient_form_data = request.session.get('recepient_form_data')
             # TODO (V2 - 귀국배송)

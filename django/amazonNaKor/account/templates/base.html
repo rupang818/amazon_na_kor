@@ -9,6 +9,28 @@
         {% block head %}
         <title>Invoice Inputs</title>
         {% endblock %}
+        <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          text-align: center; 
+        }
+
+        td:nth-child(odd){
+          background-color: #FFE4B5;
+        }
+
+        th {
+          background-color: #dddddd;
+        }
+        </style>
     </head>
     <body>
         <br>
@@ -58,6 +80,7 @@
             <ul class="navbar-nav ml-auto">
               <li class="nav-item"><a class="nav-link" href="/account/login">로그인(Log-in)</a></li>
               <li class="nav-item"><a class="nav-link" href="/account/register">가입(Register)</a></li>
+              <li class="nav-item"><a class="nav-link" href="/account/reset-password">비밀번호 리셋</a></li>
             </ul>
             {% endif %}
           </div>
