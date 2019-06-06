@@ -121,14 +121,21 @@ class EnterPackageInfoForm(forms.ModelForm):
     pkg_type = forms.IntegerField(widget=forms.HiddenInput(), initial='1')
     standard_order = forms.IntegerField(widget=forms.HiddenInput(), initial='0')
 
+    # TODO (V2): remove these to let the user specify these
+    length = forms.IntegerField(widget=forms.HiddenInput(), initial='10')
+    width = forms.IntegerField(widget=forms.HiddenInput(), initial='10')
+    height = forms.IntegerField(widget=forms.HiddenInput(), initial='10')
+    box_count = forms.IntegerField(widget=forms.HiddenInput(), initial='1')    
+
     class Meta:
         model = Package
         fields = (
-            'width',
-            'length',
-            'height',
+            # TODO (V2): uncomment these to let the user specify
+            # 'width',
+            # 'length',
+            # 'height',
+            # 'box_count',
             'weight',
-            'box_count',
         )
         unique_together = (("sender_email", "recepient_id"),)
 

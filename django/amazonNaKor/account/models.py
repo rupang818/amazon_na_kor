@@ -62,7 +62,7 @@ class Recepient(models.Model):
     phone = models.BigIntegerField("휴대전화 번호(한국)")
     postal_code = models.IntegerField("우편번호")
     address = models.CharField("주소", max_length=1024, default='')
-    customs_id = models.CharField("통관고유부호/주민번호", max_length=1024, default='')
+    customs_id = models.CharField("통관고유부호/주민번호", max_length=1024, default='', blank=True)
 
 class Package(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
@@ -129,4 +129,4 @@ class Item(models.Model):
     qty = models.IntegerField("수량", default='1')
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)    # One (item) to Many (Delivery) relationship
     item_code = models.CharField(max_length=1024, default='선택')
-    hs_code = models.CharField("상품종류", choices=ITEM_CODES, max_length=1024, default='96')
+    hs_code = models.CharField("상품종류", choices=ITEM_CODES, max_length=1024)
