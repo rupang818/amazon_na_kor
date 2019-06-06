@@ -12,11 +12,11 @@
     {% for package in packages_list %}
       <p>받는사람 아이디: {{ package.recepient_id }}</p>
       <p>패키지 고유번호: {{ package.id }}</p>
-      <!-- <p>가로: {{ package.width }}</p>
+      <p>가로: {{ package.width }}</p>
       <p>세로: {{ package.length }}</p>
-      <p>높이: {{ package.height }}</p> -->
+      <p>높이: {{ package.height }}</p>
       <p>중량: {{ package.weight }} {% if package.metric == 1 %}kg{% else %}lb{% endif %}</p> <!-- TODO: replace with ternary operator for elegance -->
-      <!-- <p>box_count: {{ package.box_count }}</p> -->
+      <p>box_count: {{ package.box_count }}</p>
       <hr>
     {% endfor %}
 

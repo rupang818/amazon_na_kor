@@ -22,10 +22,12 @@
     </div>
 
     <div class="card bg-light text-dark">
+      <div class="card-header text-center"><h5>배달정보를 입력해주세요</h5></div>
       <div class="card-body">
             {% csrf_token %}
             <p>{{ delivery_form.customs_fee_payee.label }}: {{ delivery_form.customs_fee_payee }}</p>
             <p>{{ delivery_form.method.label }}: {{ delivery_form.method }}</p>
+            <br>
             <button type="next">Submit</button>
           </form>
       </div>
