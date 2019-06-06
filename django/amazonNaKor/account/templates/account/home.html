@@ -175,16 +175,15 @@
                 </tr>
             </table>
         	<!-- TODO: provide TV요율표 -->
-            <br><br>월 ~ 금 (9:00am – 05:00pm)<br>
-            <br><font color="red">점심시간: 11:30am – 01:00pm</font><br><br>
-            {% load static %}
-            <img src="{% static "account/info.png" %}" alt="Price Chart">
+            <!-- {% load static %}
+            <img src="{% static "account/info.png" %}" alt="Price Chart"> -->
         </div>
    	</div>
+    <br>
     {% if user.is_authenticated %}
     <div class="card bg-light text-black">
 		<div class="card-body text-center">
-			<a href="/account/registerRecepient" class="button">택배 보내기</a>
+			<a href="/account/registerRecepient" class="button"><h3>택배 보내기</h3></a>
 		</div>
     </div>
     {%endif%}
