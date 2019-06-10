@@ -31,21 +31,30 @@
           background-color: #dddddd;
         }
 
-        body {
-         margin-bottom: 250px;
-        }
-
-        footer {
-          position: fixed;
+        .footer {
+          position: absolute;
           bottom: 0;
           width: 100%;
-          height: 170px;
+        }
+
+        html,
+        body {
+         height: 100%;
+         position: relative;
+        }
+
+        .main-container {
+          min-height: 100vh;
+          overflow: hidden;
+          display: block;
+          position: relative;
+          padding-bottom: 11rem;
         }
         </style>
     </head>
     <body>
-        <br>
-        <div class="container">
+      <br>
+      <div class="main-container">
         <nav class="navbar navbar-expand-lg navbar-light bg-white">
           {% load static %}
           <img src="{% static "account/logo.png" %}" height="68" width="83" padding="10" alt="Logo" style="padding: 0 10px; float: left;">
@@ -98,16 +107,14 @@
             {% endif %}
           </div>
         </nav>
-        </div>
         <br>
         {% block body %}
         <h1>Base</h1>
         {% endblock %}
-
+        <br><br>
 
       <!-- Footer definition -->
-      <div class="footer">
-      <footer class="fixed-bottom bg-dark text-light">
+      <footer class="bg-dark text-light">
           <div class="card-deck">
             <div class="card bg-dark text-white border-0">
               <div class="card-header border-0 text-center" style="height: 1.5rem;"><b>LOCATION</b></div>
@@ -136,9 +143,8 @@
               </div>
             </div>
           </div>
-          <div class="footer-copyright text-center py-3" style="height: 2.7rem;"><small>© 2019 Copyright Jihoon Kim</small></div>
-        
+          <div class="text-center py-3"><small>© 2019 Copyright Jihoon Kim</small></div>
       </footer>
-      </div>
     </body>
+    </div>
 </html>
