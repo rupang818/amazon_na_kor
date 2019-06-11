@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 
                  'test-env.veapytcpvv.us-west-1.elasticbeanstalk.com', 
-                 '13.52.168.224',
+                 '13.56.96.124',
                  'sfrocket.com',
                  'ship.sfrocket.com']
 
