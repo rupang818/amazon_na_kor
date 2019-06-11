@@ -124,8 +124,7 @@ class EnterPackageInfoForm(forms.ModelForm):
     # TODO (V2): remove these to let the user specify these
     length = forms.IntegerField(widget=forms.HiddenInput(), initial='10')
     width = forms.IntegerField(widget=forms.HiddenInput(), initial='10')
-    height = forms.IntegerField(widget=forms.HiddenInput(), initial='10')
-    box_count = forms.IntegerField(widget=forms.HiddenInput(), initial='1')    
+    height = forms.IntegerField(widget=forms.HiddenInput(), initial='10') 
 
     class Meta:
         model = Package
@@ -134,7 +133,7 @@ class EnterPackageInfoForm(forms.ModelForm):
             # 'width',
             # 'length',
             # 'height',
-            # 'box_count',
+            'box_count',
             'weight',
         )
         unique_together = (("sender_email", "recepient_id"),)
