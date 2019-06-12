@@ -94,10 +94,18 @@ class EnterRecepientInfoForm(forms.ModelForm):
             raise forms.ValidationError("받는사람 주소는 한글로만 작성 해주세요")
         return address
 
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        try:
+            phone_cleaned = int(phone.replace('-',''))
+        except ValueError:
+            raise forms.ValidationError("올바른 전화번호를 입력해주세요 (예: 010-1234-5678)")
+        return phone
+
     def clean_postal_code(self):
         postal_code = self.cleaned_data['postal_code']
         try:
-            postal_code = int(postal_code)
+            postal_code_cleaned = int(postal_code.replace('-',''))
         except ValueError:
             raise forms.ValidationError("올바른 우편번호를 입력해주세요 (예: 100-011)")
         return postal_code
