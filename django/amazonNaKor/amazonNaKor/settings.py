@@ -27,7 +27,8 @@ SECRET_KEY = '%*vcckkze2jqe#@x56)1h3ej@h3*m24wdq4_y!t#llb(o9hmmw'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 
-                 'test-env.veapytcpvv.us-west-1.elasticbeanstalk.com', 
+                 'test-env.veapytcpvv.us-west-1.elasticbeanstalk.com',
+                 'public.us-west-1.elasticbeanstalk.com',
                  '13.56.96.124',
                  'sfrocket.com',
                  'ship.sfrocket.com']

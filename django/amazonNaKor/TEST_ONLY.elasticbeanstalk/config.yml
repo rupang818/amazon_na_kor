@@ -1,0 +1,29 @@
+branch-defaults:
+  default:
+    environment: test-env
+  develop:
+    environment: test-env
+    group_suffix: null
+  master:
+    environment: public-beta
+environment-defaults:
+  beta-env:
+    branch: null
+    repository: null
+  test-env:
+    branch: null
+    repository: null
+global:
+  application_name: sfrocket-beta
+  branch: null
+  default_ec2_keyname: aws-eb
+  default_platform: Python 3.6
+  default_region: us-west-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: null
+  workspace_type: Application
