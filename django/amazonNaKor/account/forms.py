@@ -82,11 +82,11 @@ class EnterRecepientInfoForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'size': 32})
         }
 
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        if isEnglishOrKorean(name) is "e":
-            raise forms.ValidationError("받는사람 이름은 한글로만 작성 해주세요")
-        return name
+    # def clean_name(self):
+    #     name = self.cleaned_data['name']
+    #     if isEnglishOrKorean(name) is "e":
+    #         raise forms.ValidationError("받는사람 이름은 한글로만 작성 해주세요")
+    #     return name
 
     def clean_address(self):
         address = self.cleaned_data['address']

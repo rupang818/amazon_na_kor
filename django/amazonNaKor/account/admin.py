@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
 from .models import *
 from import_export.admin import ImportExportModelAdmin
+import copy
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -59,7 +60,7 @@ admin.register(Item)
 #     list_display = [i.name for i in Item._meta.get_fields()]
 #     actions = ["export_as_csv"]
 
-admin.register(Delivery)
-# class DeliveryAdmin(ImportExportModelAdmin):
-#     list_display = [i.name for i in Delivery._meta.get_fields()]
-#     actions = ["export_as_csv"]
+@admin.register(Delivery)
+class DeliveryAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'sender_email', 'recepient_id', 'package_id', 'customs_fee_payee', 'method', 'agreement_signed', 'estimate', 'dropped_off', 'sent')
+    actions = ["export_as_csv"]

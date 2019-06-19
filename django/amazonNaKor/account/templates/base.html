@@ -51,14 +51,15 @@
           padding-bottom: 11rem;
         }
         </style>
+        {% load static %}
+        <link rel="icon" type="image/png" href="{% static "account/favicon.png" %}"/>
     </head>
     <body>
       <br>
       <div class="main-container">
         <nav class="navbar navbar-expand-lg navbar-light bg-white">
-          {% load static %}
           <img src="{% static "account/logo.png" %}" height="68" width="83" padding="10" alt="Logo" style="padding: 0 10px; float: left;">
-          <a class="navbar-brand" href="/account"><h1>SF 로켓배송</h1></a>
+          <a class="navbar-brand" href="https://sfrocket.com"><h1>SF 로켓배송</h1></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
