@@ -56,7 +56,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-class Recepient(models.Model):
+class Recipient(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
     name = models.CharField("받는 사람 이름", max_length=1024, default='')
     phone = models.CharField("휴대전화 번호(한국)", max_length=16)
@@ -66,7 +66,7 @@ class Recepient(models.Model):
 
 class Package(models.Model):
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
-    recepient_id = models.IntegerField("받는사람 id")
+    recipient_id = models.IntegerField("받는사람 id")
     pkg_type = models.IntegerField("수업유형", default='1')
     width = models.FloatField("가로(cm)", default='10')
     length = models.FloatField("세로(cm)", default='10')
@@ -77,9 +77,9 @@ class Package(models.Model):
     standard_order = models.IntegerField("일반신청", default='0')
 
     @classmethod
-    def create(cls, _sender_email, _recepient_id):
+    def create(cls, _sender_email, _recipient_id):
         print("Creating a default package instance")
-        pkg = cls(sender_email=_sender_email, recepient_id=_recepient_id, pkg_type=1, width=10, length=10, height=10, weight=1, metric=2, box_count=1, standard_order=0)
+        pkg = cls(sender_email=_sender_email, recipient_id=_recipient_id, pkg_type=1, width=10, length=10, height=10, weight=1, metric=2, box_count=1, standard_order=0)
         pkg.save()
         return pkg
 
@@ -90,7 +90,7 @@ class Delivery(models.Model):
     payee = (
         ('NONE', '해당 사항 없음'),
         ('SENDER', '선불(보내는이 납부 : $5.00)'),
-        ('RECEPIENT', '후불(받는이 납부 : 5,500원)'),
+        ('RECIPIENT', '후불(받는이 납부 : 5,500원)'),
     )
     method = (
         ('DIRECT', '직접방문'),
@@ -98,7 +98,7 @@ class Delivery(models.Model):
     )
 
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
-    recepient_id = models.IntegerField("받는사람 id")
+    recipient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
     customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='NONE')
     method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
@@ -121,7 +121,7 @@ class Item(models.Model):
     )
 
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
-    recepient_id = models.IntegerField("받는사람 id")
+    recipient_id = models.IntegerField("받는사람 id")
     package_id = models.IntegerField("패키지 id")
     item_name = models.CharField("상품명", max_length=1024, default='')
     price = models.FloatField("한개당 가격 (USD)", default='0.0')

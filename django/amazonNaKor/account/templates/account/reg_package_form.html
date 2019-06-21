@@ -14,8 +14,8 @@
         </div>
       <div class="card-body">
         <br>
-        <p>받는사람 이름: {{ recepient_form_data.name }}</p>
-        <p>주소: {{ recepient_form_data.address }}</p>
+        <p>받는사람 이름: {{ recipient_form_data.name }}</p>
+        <p>주소: {{ recipient_form_data.address }}</p>
         <form method="post">
           {% csrf_token %}
           {{ package_form.as_p }}

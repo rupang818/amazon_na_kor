@@ -10,7 +10,7 @@
     <p><b>발송자 이메일: {{ items_list.0.sender_email }}</b></p>
     <hr>
     {% for item in items_list %}
-      <p>받는사람 아이디: {{ item.recepient_id }}</p>
+      <p>받는사람 아이디: {{ item.recipient_id }}</p>
       <p>패키지 고유번호: {{ item.package_id }}</p>
       <p>아이템 고유번호: {{ item.id }}</p>
       <p>상품명: {{ item.item_name }}</p>

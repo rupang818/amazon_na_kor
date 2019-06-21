@@ -22,47 +22,47 @@
           
           <form method="post">
             {% csrf_token %}
-            {{ recepient_form.name.label }}
-            {{ recepient_form.name }}
-            {% if recepient_form.name.errors %}
+            {{ recipient_form.name.label }}
+            {{ recipient_form.name }}
+            {% if recipient_form.name.errors %}
               <div class="alert alert-danger" role="alert">
-                {{ recepient_form.name.errors | striptags }}
+                {{ recipient_form.name.errors | striptags }}
               </div>
             {% endif %}
             <br><br>
 
-            {{ recepient_form.phone.label }}
-            {{ recepient_form.phone }}
-            {% if recepient_form.phone.errors %}
+            {{ recipient_form.phone.label }}
+            {{ recipient_form.phone }}
+            {% if recipient_form.phone.errors %}
               <div class="alert alert-danger" role="alert">
-                {{ recepient_form.phone.errors | striptags }}
+                {{ recipient_form.phone.errors | striptags }}
               </div>
             {% endif %}
             <br><br>
 
-            {{ recepient_form.postal_code.label }}
-            {{ recepient_form.postal_code }}
-            {% if recepient_form.postal_code.errors %}
+            {{ recipient_form.postal_code.label }}
+            {{ recipient_form.postal_code }}
+            {% if recipient_form.postal_code.errors %}
               <div class="alert alert-danger" role="alert">
-                {{ recepient_form.postal_code.errors | striptags }}
+                {{ recipient_form.postal_code.errors | striptags }}
               </div>
             {% endif %}
             <br><br>
 
-            {{ recepient_form.address.label }}
-            {{ recepient_form.address }}
-            {% if recepient_form.address.errors %}
+            {{ recipient_form.address.label }}
+            {{ recipient_form.address }}
+            {% if recipient_form.address.errors %}
               <div class="alert alert-danger" role="alert">
-                {{ recepient_form.address.errors | striptags }}
+                {{ recipient_form.address.errors | striptags }}
               </div>
             {% endif %}
             <br><br>
 
-            {{ recepient_form.customs_id.label }}
-            {{ recepient_form.customs_id }}
-            {% if recepient_form.customs_id.errors %}
+            {{ recipient_form.customs_id.label }}
+            {{ recipient_form.customs_id }}
+            {% if recipient_form.customs_id.errors %}
               <div class="alert alert-danger" role="alert">
-                {{ recepient_form.customs_id.errors | striptags }}
+                {{ recipient_form.customs_id.errors | striptags }}
               </div>
             {% endif %}
             <br><br>

@@ -23,6 +23,11 @@ def register(request):
             user = authenticate(username=email, password=password)
             login(request, user)
             return HttpResponseRedirect('/account/')
+        else:
+            reg_form_data = request.session.get('reg_form_data')
+
+            args = {'form': form,'reg_form_data': reg_form_data}
+            return render(request, 'account/reg_form.html', args)
 
     else:
         form = RegistrationForm()
@@ -30,20 +35,20 @@ def register(request):
         return render(request, 'account/reg_form.html', args)
 
 @login_required
-def registerRecepient(request):
+def registerRecipient(request):
     if request.method == 'POST':
-        recepient_form = EnterRecepientInfoForm(request.POST)
-        # TODO (V2 - 주소록): check for any existing recepients
-        #Recepient.objects.filter(sender_email=user, ...)
+        recipient_form = EnterRecipientInfoForm(request.POST)
+        # TODO (V2 - 주소록): check for any existing recipients
+        #Recipient.objects.filter(sender_email=user, ...)
 
-        if recepient_form.is_valid():
-            request.session['recepient_form_data'] = recepient_form.cleaned_data
+        if recipient_form.is_valid():
+            request.session['recipient_form_data'] = recipient_form.cleaned_data
             
             return HttpResponseRedirect('/account/registerItem')
     else:
-        recepient_form = EnterRecepientInfoForm()
-    args = {'recepient_form': recepient_form}
-    return render(request, 'account/reg_recepient_form.html', args)
+        recipient_form = EnterRecipientInfoForm()
+    args = {'recipient_form': recipient_form}
+    return render(request, 'account/reg_recipient_form.html', args)
 
 @login_required
 def registerPackage(request):
@@ -51,7 +56,7 @@ def registerPackage(request):
         package_form = EnterPackageInfoForm(request.POST)
 
         if package_form.is_valid():
-            request.session['recepient_form_data'] = request.session.get('recepient_form_data')
+            request.session['recipient_form_data'] = request.session.get('recipient_form_data')
             request.session['item_set_data'] = request.session.get('item_set_data')
             request.session['package_form_data'] = package_form.cleaned_data
             
@@ -59,15 +64,15 @@ def registerPackage(request):
 
     else:
         package_form = EnterPackageInfoForm()
-        recepient_form_data = request.session.get('recepient_form_data')
+        recipient_form_data = request.session.get('recipient_form_data')
         item_set_data = request.session.get('item_set_data')
 
-        args = {'item_set_data': item_set_data, 'package_form': package_form, 'recepient_form_data': recepient_form_data}
+        args = {'item_set_data': item_set_data, 'package_form': package_form, 'recipient_form_data': recipient_form_data}
         return render(request, 'account/reg_package_form.html', args)
 
 @login_required
 def registerItem(request):
-    recepient_form_data = request.session.get('recepient_form_data')
+    recipient_form_data = request.session.get('recipient_form_data')
     if request.method == 'POST':
         item_formset = ItemInfoFormset(request.POST)
 
@@ -77,7 +82,7 @@ def registerItem(request):
             for item_form in item_formset.cleaned_data:
                 if item_form['DELETE']:
                     continue
-                request.session['recepient_form_data'] = request.session.get('recepient_form_data')
+                request.session['recipient_form_data'] = request.session.get('recipient_form_data')
 
                 item_enum_key = str('item_%d_data' %item_index)
                 item_index += 1
@@ -89,25 +94,25 @@ def registerItem(request):
             return HttpResponseRedirect('/account/registerPackage')
     else:
         item_formset = ItemInfoFormset()
-    args = {'item_formset': item_formset, 'recepient_form_data': recepient_form_data}
+    args = {'item_formset': item_formset, 'recipient_form_data': recipient_form_data}
     return render(request, 'account/reg_item_form.html', args)
 
 @login_required
 def registerDelivery(request):
     if request.method == 'POST':
         delivery_form = EnterDeliveryInfoForm(request.POST)
-        recepient_form = EnterRecepientInfoForm(request.session.get('recepient_form_data'))
+        recipient_form = EnterRecipientInfoForm(request.session.get('recipient_form_data'))
         package_form = EnterPackageInfoForm(request.session.get('package_form_data'))
 
         if delivery_form.is_valid():
-            recepient_obj = recepient_form.save(request.user)
-            pkg_obj = package_form.save(user=request.user, recepient=recepient_obj.id)
+            recipient_obj = recipient_form.save(request.user)
+            pkg_obj = package_form.save(user=request.user, recipient=recipient_obj.id)
 
-            delivery_obj = delivery_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_obj.id)
+            delivery_obj = delivery_form.save(user=request.user, recipient=recipient_obj.id, package=pkg_obj.id)
             item_objs = []
             for item_form_data in request.session.get('item_set_data'):
                 item_form = EnterItemInfoForm(item_form_data)
-                item_obj = item_form.save(user=request.user, recepient=recepient_obj.id, package=pkg_obj.id, delivery=delivery_obj)
+                item_obj = item_form.save(user=request.user, recipient=recipient_obj.id, package=pkg_obj.id, delivery=delivery_obj)
                 item_objs.append(item_obj)
 
             msg = EmailMessage(
@@ -124,24 +129,23 @@ def registerDelivery(request):
             msg.content_subtype = "html"
             msg.send()
             
-            return render(request,"account/order_summary.html",{'item_objs': item_objs, 'recepient_obj': recepient_obj, 'delivery_obj':delivery_obj, 'pkg_obj': pkg_obj})
+            return render(request,"account/order_summary.html",{'item_objs': item_objs, 'recipient_obj': recipient_obj, 'delivery_obj':delivery_obj, 'pkg_obj': pkg_obj})
         else:
-            recepient_form_data = request.session.get('recepient_form_data')
+            recipient_form_data = request.session.get('recipient_form_data')
             package_form_data = request.session.get('package_form_data')
             item_set_data = request.session.get('item_set_data')
 
-            args = {'delivery_form': delivery_form, 'item_set_data': item_set_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
-            print(delivery_form.errors)
+            args = {'delivery_form': delivery_form, 'item_set_data': item_set_data, 'package_form_data': package_form_data, 'recipient_form_data': recipient_form_data}
             return render(request, 'account/reg_delivery_form.html', args)
             
     else:
         total_items_count = request.session.get('total_items_count')
         delivery_form = EnterDeliveryInfoForm()
-        recepient_form_data = request.session.get('recepient_form_data')
+        recipient_form_data = request.session.get('recipient_form_data')
         package_form_data = request.session.get('package_form_data')
         item_set_data = request.session.get('item_set_data')
 
-        args = {'delivery_form': delivery_form, 'item_set_data': item_set_data, 'package_form_data': package_form_data, 'recepient_form_data': recepient_form_data}
+        args = {'delivery_form': delivery_form, 'item_set_data': item_set_data, 'package_form_data': package_form_data, 'recipient_form_data': recipient_form_data}
         return render(request, 'account/reg_delivery_form.html', args)
 
 @login_required
@@ -150,10 +154,10 @@ def view_profile(request):
     return render(request, 'account/profile.html', args)
 
 @login_required
-def view_recepients(request):
+def view_recipients(request):
     user=request.user
-    recepients_list=Recepient.objects.filter(sender_email=user)
-    return render(request,"account/recepients.html",{'recepients_list':recepients_list})
+    recipients_list=Recipient.objects.filter(sender_email=user)
+    return render(request,"account/recipients.html",{'recipients_list':recipients_list})
 
 @login_required
 def view_packages(request):
@@ -236,20 +240,20 @@ def download_csv(request):
         sender_phone = user.phone
         sender_address = ", ".join([" ".join([user.address1, user.address2]), user.city, user.state, user.zip_code])
 
-        recepients_list = Recepient.objects.filter(sender_email=user)
-        for recepient in recepients_list:
-            packages_list = Package.objects.filter(sender_email=user, recepient_id=recepient.id)
+        recipients_list = Recipient.objects.filter(sender_email=user)
+        for recipient in recipients_list:
+            packages_list = Package.objects.filter(sender_email=user, recipient_id=recipient.id)
             for package in packages_list:
-                items_list = Item.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id)
+                items_list = Item.objects.filter(sender_email=user, recipient_id=recipient.id, package_id=package.id)
                 for item_index in range(len(items_list)):
                     item = items_list[item_index]
-                    deliveries_list = Delivery.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id, item=item)
+                    deliveries_list = Delivery.objects.filter(sender_email=user, recipient_id=recipient.id, package_id=package.id, item=item)
                     response_arr = []
                     for delivery in deliveries_list:
                         if delivery.dropped_off and not delivery.sent:
-                            if i == item_index:
+                            if item_index == 0:
                                 response_arr = [delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
-                                                recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',
+                                                recipient.name, '', recipient.phone, recipient.postal_code, recipient.address, '', recipient.customs_id, '', '',
                                                 package.pkg_type, '', package.width, package.length, package.height, package.weight, package.metric, package.box_count, package.standard_order, '', '',
                                                 item.item_name, '', item.price, item.qty, item.item_code, item.hs_code,
                                                 user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', '', delivery.dropped_off, delivery.sent]

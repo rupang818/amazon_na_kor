@@ -45,9 +45,9 @@ class ExportCsvMixin:
 
     export_as_csv.short_description = "Export Selected"
 
-@admin.register(Recepient)
-class RecepientAdmin(ImportExportModelAdmin):
-    list_display = [i.name for i in Recepient._meta.get_fields()]
+@admin.register(Recipient)
+class RecipientAdmin(ImportExportModelAdmin):
+    list_display = [i.name for i in Recipient._meta.get_fields()]
     actions = ["export_as_csv"]
 
 @admin.register(Package)
@@ -62,5 +62,5 @@ class ItemAdmin(ImportExportModelAdmin):
 
 @admin.register(Delivery)
 class DeliveryAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'sender_email', 'recepient_id', 'package_id', 'customs_fee_payee', 'method', 'agreement_signed', 'estimate', 'dropped_off', 'sent')
+    list_display = ('id', 'sender_email', 'recipient_id', 'package_id', 'customs_fee_payee', 'method', 'agreement_signed', 'estimate', 'dropped_off', 'sent')
     actions = ["export_as_csv"]

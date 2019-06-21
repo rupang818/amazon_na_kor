@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Recepient, Package, Item, Delivery
-
+from .models import User, Recipient, Package, Item, Delivery
+from django.contrib.auth import password_validation
 from localflavor.us.forms import USStateSelect, USZipCodeField
 from django.forms.formsets import formset_factory
 from djangoformsetjs.utils import formset_media_js
@@ -32,6 +32,16 @@ class RegistrationForm(UserCreationForm):
             'state',
             'zip_code',
         )
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                "Your passwords don't match!(같은 암호를 두번입력해주세요!)",
+                code='password_mismatch',
+            )
+        return password2
 
     def save(self, commit=True):
         user = super(RegistrationForm, self).save(commit=False) # commit=false => I haven't finished editing yet
@@ -67,9 +77,9 @@ class EditProfileForm(UserChangeForm):
         )
 
 
-class EnterRecepientInfoForm(forms.ModelForm):
+class EnterRecipientInfoForm(forms.ModelForm):
     class Meta:
-        model = Recepient
+        model = Recipient
         fields = (
             'name',
             'phone',
@@ -112,17 +122,17 @@ class EnterRecepientInfoForm(forms.ModelForm):
 
 
     def save(self, user = None, commit=True):
-        recepient = super(EnterRecepientInfoForm, self).save(commit=False)
-        recepient.sender_email = user   #PK1
-        recepient.name = self.cleaned_data['name']
-        recepient.phone = self.cleaned_data['phone']
-        recepient.postal_code = self.cleaned_data['postal_code']
-        recepient.address = self.cleaned_data['address']
-        recepient.customs_id = self.cleaned_data['customs_id']
+        recipient = super(EnterRecipientInfoForm, self).save(commit=False)
+        recipient.sender_email = user   #PK1
+        recipient.name = self.cleaned_data['name']
+        recipient.phone = self.cleaned_data['phone']
+        recipient.postal_code = self.cleaned_data['postal_code']
+        recipient.address = self.cleaned_data['address']
+        recipient.customs_id = self.cleaned_data['customs_id']
 
         if commit:
-            recepient.save()
-        return recepient
+            recipient.save()
+        return recipient
 
 class EnterPackageInfoForm(forms.ModelForm):
     metric = forms.IntegerField(widget=forms.HiddenInput(), initial='2') 
@@ -144,12 +154,12 @@ class EnterPackageInfoForm(forms.ModelForm):
             'box_count',
             'weight',
         )
-        unique_together = (("sender_email", "recepient_id"),)
+        unique_together = (("sender_email", "recipient_id"),)
 
-    def save(self, user = None, recepient = None, commit=True):
+    def save(self, user = None, recipient = None, commit=True):
         package = super(EnterPackageInfoForm, self).save(commit=False)
         package.sender_email = user   #PK1 (PK2 is 'id')
-        package.recepient_id = recepient #PK3
+        package.recipient_id = recipient #PK3
         package.width = self.cleaned_data['width']
         package.length = self.cleaned_data['length']
         package.height = self.cleaned_data['height']
@@ -179,7 +189,7 @@ class EnterItemInfoForm(forms.ModelForm):
             'qty',
             'hs_code',
         )
-        unique_together = (("sender_email", "recepient_id", "package_id"),)
+        unique_together = (("sender_email", "recipient_id", "package_id"),)
 
     def clean_price(self):
         price = self.cleaned_data['price']
@@ -193,11 +203,11 @@ class EnterItemInfoForm(forms.ModelForm):
             raise forms.ValidationError("상품명은 영문으로만 작성 해주세요")
         return item_name
 
-    def save(self, user = None, recepient = None, package = None, delivery= None, commit = True):
+    def save(self, user = None, recipient = None, package = None, delivery= None, commit = True):
         item = super(EnterItemInfoForm, self).save(commit=False)
         item.delivery = delivery
         item.sender_email = user   #PK1 (PK2 is 'id')
-        item.recepient_id = recepient #PK3
+        item.recipient_id = recipient #PK3
         item.package_id = package #PK3
         item.item_name = self.cleaned_data['item_name']
         item.hs_code = self.cleaned_data['hs_code']
@@ -232,10 +242,10 @@ class EnterDeliveryInfoForm(forms.ModelForm):
             estimate += 10.0
         return estimate
 
-    def save(self, user = None, recepient = None, package = None, commit=True):
+    def save(self, user = None, recipient = None, package = None, commit=True):
         delivery = super(EnterDeliveryInfoForm, self).save(commit=False)
         delivery.sender_email = user
-        delivery.recepient_id = recepient
+        delivery.recipient_id = recipient
         delivery.package_id = package
         delivery.customs_fee_payee = self.cleaned_data['customs_fee_payee']
         delivery.method = self.cleaned_data['method']

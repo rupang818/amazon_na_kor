@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>주소록</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1>주소록</h1>
+    <p><b>발송자 이메일: {{ recipients_list.0.sender_email }}</b></p>
+    <hr>
+    {% for recipient in recipients_list %}
+      <p>이름: {{ recipient.name }}</p>
+      <p>전화번호: {{ recipient.phone }}</p>
+      <p>우편번호: {{ recipient.postal_code }}</p>
+      <p>주소: {{ recipient.address }}</p>
+      <p>통관고유부호: {{ recipient.customs_id }}</p>
+      <hr>
+    {% endfor %}
+</div>
+{% endblock %}
