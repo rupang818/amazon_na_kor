@@ -241,16 +241,23 @@ def download_csv(request):
             packages_list = Package.objects.filter(sender_email=user, recepient_id=recepient.id)
             for package in packages_list:
                 items_list = Item.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id)
-                for item in items_list:
+                for item_index in range(len(items_list)):
+                    item = items_list[item_index]
                     deliveries_list = Delivery.objects.filter(sender_email=user, recepient_id=recepient.id, package_id=package.id, item=item)
                     response_arr = []
                     for delivery in deliveries_list:
-                        response_arr = [delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
-                                        recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',
-                                        package.pkg_type, '', package.width, package.length, package.height, package.weight, package.metric, package.box_count, package.standard_order, '', '',
-                                        item.item_name, '', item.price, item.qty, item.item_code, item.hs_code,
-                                        user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', '', delivery.dropped_off, delivery.sent]
-                        writer.writerow([str(x).encode('euc-kr').decode('euc-kr') for x in response_arr])
+                        if delivery.dropped_off and not delivery.sent:
+                            if i == item_index:
+                                response_arr = [delivery.id, sender_name, sender_phone, sender_address, delivery.id, 
+                                                recepient.name, '', recepient.phone, recepient.postal_code, recepient.address, '', recepient.customs_id, '', '',
+                                                package.pkg_type, '', package.width, package.length, package.height, package.weight, package.metric, package.box_count, package.standard_order, '', '',
+                                                item.item_name, '', item.price, item.qty, item.item_code, item.hs_code,
+                                                user.email, delivery.estimate, delivery.customs_fee_payee, '', delivery.method, '', '', delivery.dropped_off, delivery.sent]
+                            else:
+                                prepending_empty_arr = ['' for i in range(25)]
+                                postpending_empty_arr = ['' for i in range(9)]
+                                response_arr = prepending_empty_arr + [item.item_name, '', item.price, item.qty, item.item_code, item.hs_code] + postpending_empty_arr
+                            writer.writerow([str(x).encode('euc-kr').decode('euc-kr') for x in response_arr])
 
     return response
 

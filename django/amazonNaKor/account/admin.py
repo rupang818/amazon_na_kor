@@ -55,10 +55,10 @@ class PackageAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Package._meta.get_fields()]
     actions = ["export_as_csv"]
 
-admin.register(Item)
-# class ItemAdmin(ImportExportModelAdmin):
-#     list_display = [i.name for i in Item._meta.get_fields()]
-#     actions = ["export_as_csv"]
+@admin.register(Item)
+class ItemAdmin(ImportExportModelAdmin):
+    list_display = [i.name for i in Item._meta.get_fields()]
+    actions = ["export_as_csv"]
 
 @admin.register(Delivery)
 class DeliveryAdmin(ImportExportModelAdmin):
