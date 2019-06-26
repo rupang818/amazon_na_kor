@@ -238,6 +238,8 @@ class EnterDeliveryInfoForm(forms.ModelForm):
         estimate = 8.5 + weight * 1.5 
         if customs_fee_payee == 'SENDER':
             estimate += 5.0
+        elif customs_fee_payee == 'MOVING':
+            estimate += 15.00
         if method == 'UPS':
             estimate += 10.0
         return estimate

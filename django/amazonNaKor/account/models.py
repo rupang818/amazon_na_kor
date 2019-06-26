@@ -91,6 +91,7 @@ class Delivery(models.Model):
         ('NONE', '해당 사항 없음'),
         ('SENDER', '선불(보내는이 납부 : $5.00)'),
         ('RECIPIENT', '후불(받는이 납부 : 5,500원)'),
+        ('MOVING', '이사(보내는이 납부 : $15.00)')
     )
     method = (
         ('DIRECT', '직접방문'),

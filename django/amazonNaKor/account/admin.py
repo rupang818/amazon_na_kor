@@ -60,7 +60,26 @@ class ItemAdmin(ImportExportModelAdmin):
     list_display = [i.name for i in Item._meta.get_fields()]
     actions = ["export_as_csv"]
 
+#####################################
+# Delivery Object utility functions #
+#####################################
+def mark_dropped_off(modeladmin, request, queryset):
+    queryset.update(dropped_off=True)
+mark_dropped_off.short_description = "SET selected as \"DROPPED OFF\""
+
+def unmark_dropped_off(modeladmin, request, queryset):
+    queryset.update(dropped_off=False)
+unmark_dropped_off.short_description = "UNSET selected as \"DROPPED OFF\""
+
+def mark_sent(modeladmin, request, queryset):
+    queryset.update(sent=True)
+mark_sent.short_description = "SET selected as \"SENT\""
+
+def unmark_sent(modeladmin, request, queryset):
+    queryset.update(sent=False)
+unmark_sent.short_description = "UNSET selected as \"SENT\""
+
 @admin.register(Delivery)
-class DeliveryAdmin(ImportExportModelAdmin):
+class DeliveryAdmin(admin.ModelAdmin):
     list_display = ('id', 'sender_email', 'recipient_id', 'package_id', 'customs_fee_payee', 'method', 'agreement_signed', 'estimate', 'dropped_off', 'sent')
-    actions = ["export_as_csv"]
+    actions = [mark_dropped_off, unmark_dropped_off, mark_sent, unmark_sent]

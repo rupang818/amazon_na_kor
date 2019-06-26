@@ -121,7 +121,9 @@ def registerDelivery(request):
                        '<br><strong>Estimated Price:</strong> $' + str(delivery_obj.estimate) + \
                        '<br><br>저희 서비스를 이용해주셔서 감사합니다. 배송을 원하시는 날자에 아래의 주소지로 물품을 가져와 주세요: <br><strong>1914 Junction ave. San Jose CA 95131</strong> ' + \
                        '(Click <a href="https://www.google.com/maps/place/Hangil+Trade+Inc/@37.3819114,-121.9119374,17z/data=!4m13!1m7!3m6!1s0x808fcbfa7ed17c2d:0x7efbb18e5b000330!2s1914+Junction+Ave,+San+Jose,+CA+95131!3b1!8m2!3d37.3819114!4d-121.9097487!3m4!1s0x808fc99055555555:0xbef41751b43676fd!8m2!3d37.3819114!4d-121.9097487">here</a> to open Google Maps)' + \
-                       '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
+                       '<br><br>배송 추적은 아래 링크에서 확인하신 수 있으며 패키지 드랍 다음날 위 오더넘버로 조회 가능합니다 ' + \
+                       '(Click <a href="https://docs.google.com/spreadsheets/d/1HDzzWQpX9ReACKX6i9DUOVQUBGjRCm9MKhTvoAcK7UM/edit#gid=0" target="_blank">here</a> to open Tracking information)' + \
+                       # '<br><br><iframe width=600 height=450 src=https://www.google.com/maps/embed/v1/place?key=AIzaSyAQdms_gsY7auSuWlsGar5lfZbo5APfMAU&q=Hangil+Trade+Inc,San Jose></iframe>' + \
                        '<br><br>영업일은 국가 공휴일 제외 월-금 아침 9시부터 오후 5시까지 입니다 (점심시간: 12시-1시). <br>결제는 cash or check only 입니다.',
                        'info@sfrocket.com',
                        [request.user.email],
