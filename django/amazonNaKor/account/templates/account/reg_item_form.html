@@ -37,9 +37,16 @@
           <h5>정보는 모두 영문으로 기입해주세요</h5>
         </div>
         <div class="card-body">
+            {% csrf_token %}
+            {% load formset_tags %}
+
+          {% if item_formset.non_form_errors %}
+          <div class="alert alert-danger" role="alert">
+            최소 1가지의 아이템 정보를 입력해주세요
+          </div>
+          {% endif %}
+
           <ol>
-              {% csrf_token %}
-              {% load formset_tags %}
 
                 <div id="item_formset" data-formset-prefix="{{ item_formset.prefix }}">
                   {{ item_formset.management_form }}
@@ -102,7 +109,7 @@
                       {% escapescript %}
                           <div data-formset-form>
                             <li>
-                              <button type="button" data-formset-delete-button>-Delete</button>
+                              <button type="button" data-formset-delete-button>-</button>
                               <br>
                               {{ item_formset.empty_form.item_name.label }}
                               {{ item_formset.empty_form.item_name }}
@@ -147,7 +154,6 @@
 
                 </div>
           </ol>
-
           <button class="float-right" type="next" name="next" value="next">다음</button>
           <br><br>
         </div>
