@@ -218,7 +218,7 @@ class EnterItemInfoForm(forms.ModelForm):
         if commit:
             item.save()
         return item
-ItemInfoFormset = formset_factory(EnterItemInfoForm, can_delete=True, min_num=1, validate_min=True)
+ItemInfoFormset = formset_factory(EnterItemInfoForm, can_delete=True, min_num=1, validate_min=True, extra=0)
 
 class EnterDeliveryInfoForm(forms.ModelForm):
     class Meta:
