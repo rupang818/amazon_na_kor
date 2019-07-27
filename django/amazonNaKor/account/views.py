@@ -263,7 +263,7 @@ def download_csv(request):
                                 prepending_empty_arr = ['' for i in range(25)]
                                 postpending_empty_arr = ['' for i in range(9)]
                                 response_arr = prepending_empty_arr + [item.item_name, '', item.price, item.qty, item.item_code, item.hs_code] + postpending_empty_arr
-                            writer.writerow([str(x).encode('euc-kr').decode('euc-kr') for x in response_arr])
+                            writer.writerow([str(x).encode('euc-kr','ignore').decode('euc-kr','ignore') for x in response_arr])
 
     return response
 
