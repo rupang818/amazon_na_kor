@@ -103,8 +103,16 @@ class Delivery(models.Model):
     package_id = models.IntegerField("패키지 id")
     customs_fee_payee = models.CharField("통관비 지불", choices=payee, max_length=1024, default='NONE')
     method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
+
+    # Admin only fields
+    delivery_type = models.CharField(max_length=1024, default=None, null=True)
+    remark = models.CharField(max_length=1024, default=None, null=True)
+    pmt_stts = models.CharField(max_length=1024, default=None, null=True)
+
     agreement_signed = models.BooleanField("위 사항에 동의합니다")
     estimate = models.FloatField("Estimated Price")
+
+    # Admin only fields
     dropped_off = models.BooleanField(blank=True)
     sent = models.BooleanField(blank=True)
 

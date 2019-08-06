@@ -81,5 +81,5 @@ unmark_sent.short_description = "UNSET selected as \"SENT\""
 
 @admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'sender_email', 'recipient_id', 'package_id', 'customs_fee_payee', 'method', 'agreement_signed', 'estimate', 'dropped_off', 'sent')
+    list_display = ('id', 'sender_email', 'recipient_id', 'package_id', 'customs_fee_payee', 'method', 'delivery_type', 'remark', 'pmt_stts', 'agreement_signed', 'estimate', 'dropped_off', 'sent')
     actions = [mark_dropped_off, unmark_dropped_off, mark_sent, unmark_sent]

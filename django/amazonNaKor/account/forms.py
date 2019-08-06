@@ -255,6 +255,11 @@ class EnterDeliveryInfoForm(forms.ModelForm):
         delivery.dropped_off = False
         delivery.sent = False
 
+        # Admin only fields
+        delivery.delivery_type = None
+        delivery.remark = None
+        delivery.pmt_stts = None
+
         # Calculate the estimated cost
         _pkg_obj_list=Package.objects.filter(id=package)
         _weight=_pkg_obj_list[0].weight
