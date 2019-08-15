@@ -95,7 +95,7 @@ class Delivery(models.Model):
     )
     method = (
         ('DIRECT', '직접방문'),
-        # ('UPS', 'UPS 배송 (+ $10.00)'), # Uncomment for V2 - UPS
+        ('UPS', 'UPS 배송 (+ $10.00)'),
     )
 
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
@@ -105,9 +105,9 @@ class Delivery(models.Model):
     method = models.CharField("패키지 전달 방법", choices=method, max_length=1024, default='DIRECT')
 
     # Admin only fields
-    delivery_type = models.CharField(max_length=1024, default=None, null=True)
-    remark = models.CharField(max_length=1024, default=None, null=True)
-    pmt_stts = models.CharField(max_length=1024, default=None, null=True)
+    delivery_type = models.CharField(max_length=1024, default=None, null=True, blank=True)
+    remark = models.CharField(max_length=1024, default=None, null=True, blank=True)
+    pmt_stts = models.CharField(max_length=1024, default=None, null=True, blank=True)
 
     agreement_signed = models.BooleanField("위 사항에 동의합니다")
     estimate = models.FloatField("Estimated Price")
