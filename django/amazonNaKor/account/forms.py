@@ -240,8 +240,6 @@ class EnterDeliveryInfoForm(forms.ModelForm):
             estimate += 5.0
         elif customs_fee_payee == 'MOVING':
             estimate += 15.00
-        if method == 'UPS':
-            estimate += 10.0
         return estimate
 
     def save(self, user = None, recipient = None, package = None, commit=True):

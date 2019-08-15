@@ -95,7 +95,7 @@ class Delivery(models.Model):
     )
     method = (
         ('DIRECT', '직접방문'),
-        ('UPS', 'UPS 배송 (+ $10.00)'),
+        ('UPS', 'UPS 배송'),
     )
 
     sender_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='sender_email')
